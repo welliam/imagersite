@@ -6,7 +6,13 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 class ProfileManager(models.Manager):
+    """Manager for profiles.
+
+    Only returns profiles for which the corresponding user's is_active
+    field is True."""
+
     def get_queryset(self):
+        """Return a queryset which only contains is_active user)."""
         queryset = super(ProfileManager, self).get_queryset()
         return queryset.filter(user__is_active__exact=True)
 
@@ -38,6 +44,7 @@ class UserProfile(models.Model):
 
 @receiver(models.signals.post_save, sender=User)
 def create_profile(sender, **kwargs):
+    """Create a new profile for a newly-created User."""
     UserProfile(
         user=kwargs['instance']
     ).save()
