@@ -8,7 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 class ProfileManager(models.Manager):
     def get_queryset(self):
         queryset = super(ProfileManager, self).get_queryset()
-        return queryset.filter(is_active=True)
+        return queryset.filter(user__is_active__exact=True)
 
 
 @python_2_unicode_compatible
@@ -21,7 +21,7 @@ class UserProfile(models.Model):
         related_name='profile',
         unique=True
     )
-    is_active = models.BooleanField()
+    objects = models.Manager()
     active = ProfileManager()
 
     first_name = models.CharField(max_length=128)
@@ -39,6 +39,5 @@ class UserProfile(models.Model):
 @receiver(models.signals.post_save, sender=User)
 def create_profile(sender, **kwargs):
     UserProfile(
-        user=kwargs['instance'],
-        is_active=False
+        user=kwargs['instance']
     ).save()
