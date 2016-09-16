@@ -32,11 +32,3 @@ class ProfileTestCase(TestCase):
     def test_profile_active(self):
         """Test profile manager."""
         self.assertTrue(len(UserProfile.active.all()) > 0)
-
-    
-
-
-    
-
-
-        
