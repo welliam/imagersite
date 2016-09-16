@@ -30,8 +30,7 @@ class UserProfile(models.Model):
     objects = models.Manager()
     active = ProfileManager()
 
-    first_name = models.CharField(max_length=128)
-    last_name = models.CharField(max_length=128)
+
     camera_type = models.CharField(max_length=128)
     genre = models.CharField(max_length=128)
     is_professional = models.BooleanField(default=False)
@@ -39,7 +38,7 @@ class UserProfile(models.Model):
     website = models.CharField(max_length=128)
 
     def __repr__(self):
-        return 'UserProfile(first_name={})'.format(self.first_name)
+        return 'UserProfile(first_name={})'.format(self.user.first_name)
 
 
 @receiver(models.signals.post_save, sender=User)
