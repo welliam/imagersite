@@ -93,3 +93,4 @@ ENV/
 
 # Personal
 lib64
+media/*
