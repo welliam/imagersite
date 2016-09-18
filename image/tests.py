@@ -13,5 +13,15 @@ class PhotoTestCase(TestCase):
         Photo(
             user=self.user, 
             title='image1',
-            description='The first photo.',
+            description='The first photo.'
         ).save()
+
+    
+    def test_photo_has_title(self):
+        """Test photo has title."""
+        self.assertEqual(self.user.photo.title, 'image1')
+
+    def test_photo_has_descrip(self):
+        """Test photo has a description."""
+        self.assertEqual(self.user.photo.description, 'The first photo.')
+    
