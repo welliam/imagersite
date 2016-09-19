@@ -34,7 +34,7 @@ class Photo(models.Model):
     date_uploaded = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     date_published = models.DateTimeField(auto_now_add=True)
-    pusblished = models.CharField(
+    published = models.CharField(
         max_length=7,
         choices=PUB_CHOICES,
         default='Public'
