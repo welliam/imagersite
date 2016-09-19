@@ -47,3 +47,8 @@ class Photo(models.Model):
 class Album(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField()
+    user = models.ForeignKey(
+        User,
+        on_delete=models.deletion.CASCADE,
+        related_name='albums'
+    )

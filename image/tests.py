@@ -57,16 +57,27 @@ class AlbumTestCase(TestCase):
         """Setup Album test case."""
         self.user = User(username='Cris', first_name='Cris')
         self.user.save()
+
         self.photo = Photo(
             user=self.user,
             title='some photo',
             description='this is a photo'
         )
+        self.photo.save()
+
         self.album = Album(
             title='good album',
             description='this is an album',
+            user=self.user
         )
+        self.album.save()
 
     def test_album_title(self):
         """Test album title field."""
         self.assertTrue(hasattr(self.album, 'title'))
+
+    def test_user_foreign_key(self):
+        """Test album user field."""
+        self.assertEqual(
+            self.album.title, self.album.user.albums.first().title
+        )
