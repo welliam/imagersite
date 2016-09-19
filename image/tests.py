@@ -88,3 +88,7 @@ class AlbumTestCase(TestCase):
         expected_date = datetime.utcnow().strftime(format_string)
         date = self.album.date_created.strftime(format_string)
         self.assertEqual(expected_date, date)
+
+    def test_published(self):
+        """Test published field."""
+        self.assertEqual(self.album.published, 'Public')
