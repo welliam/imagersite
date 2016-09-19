@@ -72,6 +72,8 @@ class AlbumTestCase(TestCase):
         )
         self.album.save()
 
+        self.album.photos.add(self.photo)
+
     def test_album_title(self):
         """Test album title field."""
         self.assertTrue(hasattr(self.album, 'title'))
@@ -92,3 +94,9 @@ class AlbumTestCase(TestCase):
     def test_published(self):
         """Test published field."""
         self.assertEqual(self.album.published, 'Public')
+
+    def test_photos_foreign_key(self):
+        """Test album photos field."""
+        self.assertEqual(
+            self.photo.title, self.album.photos.first().title
+        )

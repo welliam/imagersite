@@ -52,6 +52,10 @@ class Album(models.Model):
         on_delete=models.deletion.CASCADE,
         related_name='albums'
     )
+    photos = models.ManyToManyField(
+        Photo,
+        related_name='albums'
+    )
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     date_published = models.DateTimeField(auto_now_add=True)
