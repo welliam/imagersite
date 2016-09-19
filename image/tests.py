@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Photo    
+from .models import Album, Photo
 from datetime import datetime
 
-# Create your tests here.
 
 class PhotoTestCase(TestCase):
     """Test case for photo Model"""
@@ -13,20 +12,21 @@ class PhotoTestCase(TestCase):
         self.user = User(username='Cris', first_name='Cris')
         self.user.save()
         Photo(
-            user=self.user, 
+            user=self.user,
             title='image1',
             description='The first photo.'
         ).save()
 
-    
     def test_photo_has_title(self):
         """Test photo has title."""
         self.assertEqual(self.user.photos.first().title, 'image1')
 
     def test_photo_has_descrip(self):
         """Test photo has a description."""
-        self.assertEqual(self.user.photos.first().description, 'The first photo.')
-    
+        self.assertEqual(
+            self.user.photos.first().description, 'The first photo.'
+        )
+
     # def test_photo_path(self):
     #     """Test the path of the file."""
     #     self.assertIn('/media/image1.jpg', self.user.photos.first().photo.upload_to)
@@ -49,3 +49,24 @@ class PhotoTestCase(TestCase):
         photo.save()
         self.assertEqual(self.user.photos.first().published, 'Private')
 
+
+class AlbumTestCase(TestCase):
+    """Test case for album model."""
+
+    def setUp(self):
+        """Setup Album test case."""
+        self.user = User(username='Cris', first_name='Cris')
+        self.user.save()
+        self.photo = Photo(
+            user=self.user,
+            title='some photo',
+            description='this is a photo'
+        )
+        self.album = Album(
+            title='good album',
+            description='this is an album',
+        )
+
+    def test_album_title(self):
+        """Test album title field."""
+        self.assertTrue(hasattr(self.album, 'title'))

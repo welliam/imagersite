@@ -11,21 +11,23 @@ PUB_CHOICES = (
     ('Shared', 'Shared'),
 )
 
+
 def photo_path(instance, filename):
     """Create file path for the photo."""
     return "{0}/{1}".format(instance, filename)
+
 
 @python_2_unicode_compatible
 class Photo(models.Model):
     """Information about photo."""
     user = models.ForeignKey(
-        User, 
+        User,
         on_delete=models.deletion.CASCADE,
         related_name='photos',
         null=True,
     )
     photo = models.ImageField(
-        upload_to = photo_path,
+        upload_to=photo_path,
         blank=True,
         null=True
     )
@@ -39,3 +41,9 @@ class Photo(models.Model):
         choices=PUB_CHOICES,
         default='Public'
     )
+
+
+@python_2_unicode_compatible
+class Album(models.Model):
+    title = models.CharField(max_length=128)
+    description = models.TextField()
