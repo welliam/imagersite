@@ -81,3 +81,10 @@ class AlbumTestCase(TestCase):
         self.assertEqual(
             self.album.title, self.album.user.albums.first().title
         )
+
+    def test_album_date_created(self):
+        """Test album date created field."""
+        format_string = "%Y-%m-%d"
+        expected_date = datetime.utcnow().strftime(format_string)
+        date = self.album.date_created.strftime(format_string)
+        self.assertEqual(expected_date, date)
