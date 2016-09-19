@@ -37,3 +37,15 @@ class PhotoTestCase(TestCase):
         expected_date = datetime.utcnow().strftime(format_string)
         date = self.user.photos.first().date_uploaded.strftime(format_string)
         self.assertEqual(expected_date, date)
+
+    def test_published_public(self):
+        """Test published is public."""
+        self.assertEqual(self.user.photos.first().published, 'Public')
+
+    def test_published_set_private(self):
+        """Test published gets set to private."""
+        photo = self.user.photos.first()
+        photo.published = 'Private'
+        photo.save()
+        self.assertEqual(self.user.photos.first().published, 'Private')
+
