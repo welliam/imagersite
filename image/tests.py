@@ -100,3 +100,12 @@ class AlbumTestCase(TestCase):
         self.assertEqual(
             self.photo.title, self.album.photos.first().title
         )
+
+    def test_album_cover(self):
+        """Test album cover foreign key."""
+        self.album.cover = self.photo
+        self.album.save()
+        self.assertEqual(
+            self.photo.title,
+            self.photo.cover_for.first().cover.title
+        )
