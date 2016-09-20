@@ -8,3 +8,8 @@ class HomeViewTestCase(TestCase):
         """Test home view returns 200."""
         c = Client()
         self.assertEqual(c.get('/').status_code, 200)
+
+    def test_home_view_has_form(self):
+        """Test home view returns 200."""
+        c = Client()
+        self.assertIn(b'</form>', c.get('/').content)
