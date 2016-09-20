@@ -27,3 +27,17 @@ class RegistrationViewTestCase(TestCase):
         """Test register view has form."""
         c = Client()
         self.assertIn(b'</form>', c.get('/register').content)
+
+
+class LoginViewTestCase(TestCase):
+    """Test case for login view."""
+
+    def test_register_view_status_code(self):
+        """Test login view returns 200."""
+        c = Client()
+        self.assertEqual(c.get('/login').status_code, 200)
+
+    def test_login_view_has_form(self):
+        """Test login view has form."""
+        c = Client()
+        self.assertIn(b'</form>', c.get('/login').content)
