@@ -5,6 +5,15 @@ body {
     font-family: sans;
 }
 
+a {
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+
+}
+
 input[type="submit"] {
     background: transparent;
     width: 10em;
