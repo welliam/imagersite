@@ -64,12 +64,7 @@ class RegisterTestCase(TestCase):
         self.username = 'username'
         self.password = ':LSKDjfsd89s'
         self.email = 'email@example.org'
-
-    def test_register(self):
-        """Test creating a user and saving."""
-        content = self.client.get('/accounts/register/').content
-        soup = BeautifulSoup(content, 'html.parser')
-        csrf = soup.select('input[name="csrfmiddlewaretoken"]')[0].value
+        csrf = self.csrftoken(self.client.get('/accounts/register/').content)
 
         self.client.post('/accounts/register/', dict(
             csrfmiddlewaretoken=csrf,
@@ -78,4 +73,12 @@ class RegisterTestCase(TestCase):
             password2=self.password,
             email=self.email,
         ))
-        self.assertEqual(User.objects.first().username, self.username)
+
+    def csrftoken(self, content):
+        """Get a csrf token for testing."""
+        soup = BeautifulSoup(content, 'html.parser')
+        return soup.select('input[name="csrfmiddlewaretoken"]')[0].value
+
+    def test_register(self):
+        """Test creating a user and saving."""
+        self.assertTrue(bool(User.objects.filter(username=self.username)))
