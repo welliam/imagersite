@@ -1,4 +1,6 @@
 from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from bs4 import BeautifulSoup
 
 
 class HomeViewTestCase(TestCase):
@@ -51,3 +53,29 @@ class LoginViewTestCase(TestCase):
         """Test login view has form."""
         c = Client()
         self.assertIn(b'</form>', c.get('/accounts/login/').content)
+
+
+class RegisterTestCase(TestCase):
+    """Test case for registering users."""
+
+    def setUp(self):
+        """Create Setup."""
+        self.client = Client()
+        self.username = 'username'
+        self.password = ':LSKDjfsd89s'
+        self.email = 'email@example.org'
+
+    def test_register(self):
+        """Test creating a user and saving."""
+        content = self.client.get('/accounts/register/').content
+        soup = BeautifulSoup(content, 'html.parser')
+        csrf = soup.select('input[name="csrfmiddlewaretoken"]')[0].value
+
+        self.client.post('/accounts/register/', dict(
+            csrfmiddlewaretoken=csrf,
+            username=self.username,
+            password1=self.password,
+            password2=self.password,
+            email=self.email,
+        ))
+        self.assertEqual(User.objects.first().username, self.username)
