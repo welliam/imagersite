@@ -21,12 +21,12 @@ class RegistrationViewTestCase(TestCase):
     def test_register_view_status_code(self):
         """Test register view returns 200."""
         c = Client()
-        self.assertEqual(c.get('/register').status_code, 200)
+        self.assertEqual(c.get('/accounts/register/').status_code, 200)
 
     def test_register_view_has_form(self):
         """Test register view has form."""
         c = Client()
-        self.assertIn(b'</form>', c.get('/register').content)
+        self.assertIn(b'</form>', c.get('/accounts/register/').content)
 
 
 class LoginViewTestCase(TestCase):
@@ -35,9 +35,9 @@ class LoginViewTestCase(TestCase):
     def test_register_view_status_code(self):
         """Test login view returns 200."""
         c = Client()
-        self.assertEqual(c.get('/login').status_code, 200)
+        self.assertEqual(c.get('/accounts/login/').status_code, 200)
 
     def test_login_view_has_form(self):
         """Test login view has form."""
         c = Client()
-        self.assertIn(b'</form>', c.get('/login').content)
+        self.assertIn(b'</form>', c.get('/accounts/login/').content)
