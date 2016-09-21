@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from bs4 import BeautifulSoup
+from django.core import mail
 
 
 class HomeViewTestCase(TestCase):
@@ -64,21 +65,33 @@ class RegisterTestCase(TestCase):
         self.username = 'username'
         self.password = ':LSKDjfsd89s'
         self.email = 'email@example.org'
-        csrf = self.csrftoken(self.client.get('/accounts/register/').content)
-
-        self.client.post('/accounts/register/', dict(
+        csrf = self.get_csrf_token('/accounts/register/')
+        response = self.client.post('/accounts/register/', dict(
             csrfmiddlewaretoken=csrf,
             username=self.username,
             password1=self.password,
             password2=self.password,
             email=self.email,
         ))
+        url = mail.outbox[-1].body.split()[-1]
+        path = '/'.join(url.split('/')[1:])
+        res = self.client.get('/' + path)
 
-    def csrftoken(self, content):
+    def get_csrf_token(self, url):
         """Get a csrf token for testing."""
+        content = self.client.get(url).content
         soup = BeautifulSoup(content, 'html.parser')
         return soup.select('input[name="csrfmiddlewaretoken"]')[0].value
 
     def test_register(self):
         """Test creating a user and saving."""
         self.assertTrue(bool(User.objects.filter(username=self.username)))
+
+    def test_login(self):
+        """Test login."""
+        csrf = self.get_csrf_token('/accounts/login/')
+        response = self.client.post('/accounts/login/', dict(
+            username=self.username,
+            password=self.password,
+            csrfmiddlewaretoken=csrf))
+        self.assertEqual(response.status_code, 302)

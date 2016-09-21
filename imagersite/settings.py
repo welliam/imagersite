@@ -134,5 +134,5 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 
 ACCOUNT_ACTIVATION_DAYS = 30
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 LOGIN_REDIRECT_URL = '/'
