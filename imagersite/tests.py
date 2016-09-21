@@ -14,6 +14,16 @@ class HomeViewTestCase(TestCase):
         c = Client()
         self.assertIn(b'</a>', c.get('/').content)
 
+    def test_home_view_has_register_link(self):
+        """Test home view has register link."""
+        c = Client()
+        self.assertIn(b'href="/accounts/register/"', c.get('/').content)
+
+    def test_home_view_has_login_link(self):
+        """Test home view has login link."""
+        c = Client()
+        self.assertIn(b'href="/accounts/login/"', c.get('/').content)
+
 
 class RegistrationViewTestCase(TestCase):
     """Test case for registration view."""
