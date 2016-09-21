@@ -1,1 +1,1 @@
-Your activation key is {% activation_key %}
+go here to activate: {{ site }}/accounts/activate/{{ activation_key }}/
