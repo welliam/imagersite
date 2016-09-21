@@ -125,6 +125,12 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+
 MEDIA_URL = '/media/'
 
 ACCOUNT_ACTIVATION_DAYS = 30
