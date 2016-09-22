@@ -1,7 +1,12 @@
 body {
+    font-family: sans;
+    max-width: 50em;
+}
+
+
+div#content {
     text-align: center;
     margin-top: 3em;
-    font-family: sans;
 }
 
 a {
@@ -10,12 +15,12 @@ a {
 
 a:hover {
     text-decoration: none;
-
 }
 
 input[type="submit"] {
     background: transparent;
-    width: 10em;
+    border-radius: 1em;
+    padding: 0.5em 0.7em;
 }
 
 input[type="text"], input[type="password"] {

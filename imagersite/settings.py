@@ -136,3 +136,4 @@ MEDIA_URL = '/media/'
 ACCOUNT_ACTIVATION_DAYS = 30
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
