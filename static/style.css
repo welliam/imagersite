@@ -1,7 +1,6 @@
 body {
     text-align: center;
     margin-top: 3em;
-    font-size: 3em;
     font-family: sans;
 }
 
@@ -26,5 +25,4 @@ input[type="text"], input[type="password"] {
     border-bottom: 2px solid black;
     width: 20em;
     margin: 1em auto;
-    display: block;
 }
