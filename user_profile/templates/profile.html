@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+<h1>Hi {{ username }}</h1>
+<div>Full name: {{ first_name }} {{ last_name }}</div>
+<div>Email: {{ email }}</div>
+<div>Website: {{ website }}</div>
+<div>Camera type: {{ camera_type }}</div>
+<div>Genre: {{ genre }}</div>
+
+<div>
+  {% if is_professional %}
+  Professional
+  {% else %}
+  Hobbyist
+  {% endif %}
+</div>
+
+{% if hireable %}
+<div>Looking for work</div>
+{% endif %}
+
+{% endblock %}

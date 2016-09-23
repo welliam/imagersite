@@ -23,5 +23,6 @@ from .views import home_view
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home_view),
-    url(r'^accounts/', include('registration.backends.hmac.urls'))
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url(r'^profile/', include('user_profile.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

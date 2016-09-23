@@ -56,7 +56,10 @@ ROOT_URLCONF = 'imagersite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'imagersite', 'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'imagersite', 'templates'),
+            os.path.join(BASE_DIR, 'user_profile', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

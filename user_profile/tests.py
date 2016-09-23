@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import UserProfile
+from imagersite.tests import AuthenticatedTestCase
+
 
 # Create your tests here.
 class ProfileTestCase(TestCase):
@@ -19,7 +21,7 @@ class ProfileTestCase(TestCase):
         """Test Profile has username"""
         self.assertEqual(self.user.profile.user.username, 'Cris')
 
-# Learn to paramertize 
+# Learn to paramertize
 
     def test_profile_has_cameratype(self):
         """Test profile has cameria type attr."""
@@ -28,7 +30,15 @@ class ProfileTestCase(TestCase):
     def test_profile_repr(self):
         """Test repr function."""
         self.assertIn('Cris', repr(self.user.profile))
-    
+
     def test_profile_active(self):
         """Test profile manager."""
         self.assertTrue(len(UserProfile.active.all()) > 0)
+
+
+class UserProfilePageTestCase(AuthenticatedTestCase):
+    """Test case for viewing the profile."""
+
+    def test_profile_page(self):
+        self.log_in()
+        self.assertEqual(self.client.get('/profile/').status_code, 200)

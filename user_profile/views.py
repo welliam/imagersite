@@ -1,3 +1,9 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def profile_view(request):
+    """Return rendered profile page."""
+    import pdb; pdb.set_trace
+    return render(request, 'profile.html', context={
+    })
+

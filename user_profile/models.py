@@ -30,7 +30,6 @@ class UserProfile(models.Model):
     objects = models.Manager()
     active = ProfileManager()
 
-
     camera_type = models.CharField(max_length=128)
     genre = models.CharField(max_length=128)
     is_professional = models.BooleanField(default=False)
