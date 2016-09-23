@@ -1,0 +1,17 @@
+<!doctype HTML>
+
+{% load static from staticfiles %}
+
+<html>
+  <head>
+    <title>Imager - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+  </head>
+
+  <body>
+    <a href='/'>Home</a>
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
