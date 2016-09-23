@@ -1,6 +1,7 @@
 body {
     font-family: sans;
     max-width: 50em;
+    margin: auto;
 }
 
 
@@ -23,7 +24,7 @@ input[type="submit"] {
     padding: 0.5em 0.7em;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="email"] {
     border: 0;
     outline: 0;
     background: transparent;
@@ -34,4 +35,5 @@ input[type="text"], input[type="password"] {
 
 .helptext {
     display: block;
+    color: grey;
 }
