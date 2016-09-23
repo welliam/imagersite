@@ -45,4 +45,18 @@ class UserProfilePageTestCase(AuthenticatedTestCase):
 
     def test_profile_page_has_username(self):
         self.log_in()
-        self.assertIn(self.username.encode('utf-8'), self.client.get('/profile/').content)
+        self.assertIn(
+            self.username.encode('utf-8'),
+            self.client.get('/profile/').content
+        )
+
+    def test_profile_page_has_photo_count(self):
+        self.log_in()
+        self.assertIn(
+            b'Photos uploaded:',
+            self.client.get('/profile/').content
+        )
+
+    def test_profile_page_has_album_count(self):
+        self.log_in()
+        self.assertIn(b'Albums created:', self.client.get('/profile/').content)

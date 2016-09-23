@@ -12,6 +12,8 @@ def profile_view(request):
         'genre': request.user.profile.genre,
         'is_professional': request.user.profile.is_professional,
         'hireable': request.user.profile.hireable,
-        'request': request
+        'request': request,
+        'photos_uploaded': len(request.user.photos.all()),
+        'albums_created': len(request.user.albums.all()),
     })
 
