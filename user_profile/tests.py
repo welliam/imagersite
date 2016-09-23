@@ -42,3 +42,7 @@ class UserProfilePageTestCase(AuthenticatedTestCase):
     def test_profile_page(self):
         self.log_in()
         self.assertEqual(self.client.get('/profile/').status_code, 200)
+
+    def test_profile_page_has_username(self):
+        self.log_in()
+        self.assertIn(self.username.encode('utf-8'), self.client.get('/profile/').content)

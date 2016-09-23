@@ -6,13 +6,31 @@
 {% block content %}
 
 <h1>Hi {{ username }}</h1>
-<div>Full name: {{ first_name }} {{ last_name }}</div>
-<div>Email: {{ email }}</div>
-<div>Website: {{ website }}</div>
+
+{% if request.user.is_authenticated %}
+
+{% if first_name %}
+  <div>Full name: {{ first_name }} {{ last_name }}</div>
+{% endif %}
+
+{% if email %}
+  <div>Email: {{ email }}</div>
+{% endif %}
+
+{% if website %}
+  <div>Website: {{ website }}</div>
+{% endif %}
+
+{% if camera_type %}
 <div>Camera type: {{ camera_type }}</div>
+{% endif %}
+
+{% if genre %}
 <div>Genre: {{ genre }}</div>
+{% endif %}
 
 <div>
+  Level:
   {% if is_professional %}
   Professional
   {% else %}
@@ -23,5 +41,7 @@
 {% if hireable %}
 <div>Looking for work</div>
 {% endif %}
+{% endif %}
 
 {% endblock %}
+
