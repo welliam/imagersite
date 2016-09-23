@@ -9,8 +9,7 @@
 
 <form method="POST">
   {% csrf_token %}
-  <input type="text" name="username" placeholder="Username">
-  <input type="password" name="password" placeholder="Password">
+  {{ form.as_p }}
   <input type="submit" value="Log in">
 </form>
 
