@@ -5,7 +5,10 @@ from django.core import mail
 
 
 class AuthenticatedTestCase(TestCase):
-    """Test cases inherit from this when they need a user."""
+    """Test cases inherit from this when they need a user.
+
+    The client has methods for logging in; this is for testing the
+    views associated with registration and log in."""
 
     def setUp(self):
         self.username = 'username'
