@@ -3,5 +3,5 @@ from .views import profile_view
 
 
 urlpatterns = [
-    url(r'^$', profile_view),
+    url(r'^$', profile_view, name='profile'),
 ]
