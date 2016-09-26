@@ -1,8 +1,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
-from bs4 import BeautifulSoup
 from django.core import mail
+
 
 class AuthenticatedTestCase(TestCase):
     """Test cases inherit from this when they need a user."""
@@ -26,9 +26,7 @@ class AuthenticatedTestCase(TestCase):
 
     def get_csrf_token(self, url):
         """Get a csrf token for testing."""
-        content = self.client.get(url).content
-        soup = BeautifulSoup(content, 'html.parser')
-        return soup.select('input[name="csrfmiddlewaretoken"]')[0].value
+        return self.client.get(url).context['csrf_token']
 
     def log_in(self):
         """Log user in."""
@@ -36,8 +34,8 @@ class AuthenticatedTestCase(TestCase):
         return self.client.post(reverse('auth_login'), dict(
             username=self.username,
             password=self.password,
-            csrfmiddlewaretoken=csrf)
-        )
+            csrfmiddlewaretoken=csrf
+        ))
 
 
 class HomeViewTestCase(TestCase):
@@ -112,4 +110,3 @@ class RegisterTestCase(AuthenticatedTestCase):
     def test_login(self):
         """Test login."""
         self.assertEqual(self.log_in().status_code, 302)
-
