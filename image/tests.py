@@ -2,6 +2,13 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Album, Photo
 from datetime import datetime
+from factory.django import DjangoModelFactory, ImageField
+
+
+class PhotoFactory(DjangoModelFactory):
+    class Meta(object):
+        model = Photo
+    photo = ImageField()
 
 
 class PhotoTestCase(TestCase):
@@ -11,10 +18,10 @@ class PhotoTestCase(TestCase):
         """Setup photo model."""
         self.user = User(username='Cris', first_name='Cris')
         self.user.save()
-        Photo(
+        PhotoFactory(
             user=self.user,
             title='image1',
-            description='The first photo.'
+            description='The first photo.',
         ).save()
 
     def test_photo_has_title(self):

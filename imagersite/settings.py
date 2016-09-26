@@ -59,6 +59,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'imagersite', 'templates'),
             os.path.join(BASE_DIR, 'user_profile', 'templates'),
+            os.path.join(BASE_DIR, 'image', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

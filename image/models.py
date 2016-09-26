@@ -13,7 +13,7 @@ PUB_CHOICES = (
 
 def photo_path(instance, filename):
     """Create file path for the photo."""
-    return "{0}/{1}".format(instance, filename)
+    return "{0}/{1}".format(instance.user.username, filename)
 
 
 @python_2_unicode_compatible
