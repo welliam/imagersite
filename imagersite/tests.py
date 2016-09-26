@@ -90,6 +90,13 @@ class RegistrationViewTestCase(TestCase):
         """Test register view has form."""
         self.assertContains(self.response, '</form>')
 
+    def test_register_failure(self):
+        """Test register with bad credentials."""
+        self.assertEqual(
+            self.client.post(reverse('registration_register'), {}).status_code,
+            200
+        )
+
 
 class LoginViewTestCase(TestCase):
     """Test case for login view."""
