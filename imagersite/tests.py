@@ -30,15 +30,17 @@ class AuthenticatedTestCase(TestCase):
         """Get a csrf token for testing."""
         return self.client.get(url).context['csrf_token']
 
-    def log_in(self):
+    def log_in(self, username=None, password=None):
         """Log user in.
 
         self.client has a login method, but this is used when the
         response of a successful login is needed."""
         csrf = self.get_csrf_token(reverse('auth_login'))
+        username = username or self.username
+        password = password or self.password
         return self.client.post(reverse('auth_login'), dict(
-            username=self.username,
-            password=self.password,
+            username=username,
+            password=password,
             csrfmiddlewaretoken=csrf
         ))
 
@@ -115,3 +117,11 @@ class RegisterTestCase(AuthenticatedTestCase):
     def test_login(self):
         """Test login."""
         self.assertEqual(self.log_in().status_code, 302)
+
+    def test_login_failure(self):
+        """Test login failure."""
+        self.client.get(reverse('auth_logout'))
+        self.assertEqual(
+            self.log_in(username=self.username + 'a').status_code,
+            200
+        )
