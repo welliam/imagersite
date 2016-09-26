@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core import mail
@@ -8,7 +8,6 @@ class AuthenticatedTestCase(TestCase):
     """Test cases inherit from this when they need a user."""
 
     def setUp(self):
-        self.client = Client()
         self.username = 'username'
         self.password = ':LSKDjfsd89s'
         self.email = 'email@example.org'
@@ -29,7 +28,10 @@ class AuthenticatedTestCase(TestCase):
         return self.client.get(url).context['csrf_token']
 
     def log_in(self):
-        """Log user in."""
+        """Log user in.
+
+        self.client has a login method, but this is used when the
+        response of a successful login is needed."""
         csrf = self.get_csrf_token(reverse('auth_login'))
         return self.client.post(reverse('auth_login'), dict(
             username=self.username,
