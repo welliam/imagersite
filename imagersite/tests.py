@@ -73,7 +73,17 @@ class HomeViewTestCase(TestCase):
             self.response,
             'href="{}"'.format(reverse('auth_login'))
         )
+    
+    def test_home_view_has_random_iamge(self):
+        """Test home view has a random image."""
+        self.assertContains(
+            self.response,
+            '<img src='
+        )
 
+    def test_home_view_random_image_in_context(self):
+        """Test random image is in context."""
+        self.assertIn("random_image_url", self.response.context)
 
 class RegistrationViewTestCase(TestCase):
     """Test case for registration view."""
