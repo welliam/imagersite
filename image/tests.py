@@ -1,8 +1,9 @@
+from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Album, Photo
-from datetime import datetime
+from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
+from .models import Album, Photo
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -33,10 +34,6 @@ class PhotoTestCase(TestCase):
         self.assertEqual(
             self.user.photos.first().description, 'The first photo.'
         )
-
-    # def test_photo_path(self):
-    #     """Test the path of the file."""
-    #     self.assertIn('/media/image1.jpg', self.user.photos.first().photo.upload_to)
 
     def test_date_uploaded(self):
         """Test uploaded date."""
@@ -116,3 +113,30 @@ class AlbumTestCase(TestCase):
             self.photo.title,
             self.photo.cover_for.first().cover.title
         )
+
+class LibraryTestCase(TestCase):
+    """Testcase for Library."""
+
+    def setUp(self):
+        """Setup Library testcase."""
+    #   username = 'something'
+    #   password = 'somethingelse'
+        user = User(username='b')
+        user.save()
+        self.client.force_login(user)
+        for i in range(10):
+            PhotoFactory(
+                user=user,
+                title='image{}'.format(i),
+                description='Descrpition for image{}'.format(i),
+            ).save()
+        album = Album(user=user, title='Blue Pictures', description='A test album.')
+        album.save()
+        for photo in list(user.photos.all())[:3]:
+            album.photos.add(photo)
+
+    def test_library_status_code(self):
+        """Test status code of library page."""
+        response = self.client.get(reverse('library'))
+        self.assertEquals(response.status_code, 200)
+
