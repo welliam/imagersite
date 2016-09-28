@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^$', home_view, name='home'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^profile/', include('user_profile.urls')),
-    url(r'^library/', include('image.urls'))
+    url(r'^images/', include('image.urls'))
 ] + static(
     settings.STATIC_URL, document_root=settings.STATIC_ROOT
 ) + static(

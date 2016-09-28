@@ -114,10 +114,11 @@ class AlbumTestCase(TestCase):
             self.photo.cover_for.first().cover.title
         )
 
-class LibraryTestCase(TestCase):
-    """Testcase for Library."""
 
-    def setUp(self):
+class UserTestCase(TestCase):
+    """Testcase with a user."""
+
+    def setUp(self, test_url=None):
         """Setup Library testcase."""
         self.user = User(username='acutebird')
         self.user.save()
@@ -128,16 +129,38 @@ class LibraryTestCase(TestCase):
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
             ).save()
-        album = Album(user=self.user, title='Blue Pictures', description='A test album.')
+        album = Album(
+            user=self.user,
+            title='Blue Pictures',
+            description='A test album.'
+        )
         album.save()
         for photo in list(self.user.photos.all())[:3]:
             album.photos.add(photo)
+
+
+class LibraryTestCase(UserTestCase):
+    """Testcase for Library."""
+    def setUp(self):
+        super(LibraryTestCase, self).setUp()
         self.response = self.client.get(reverse('library'))
 
     def test_library_status_code(self):
         """Test status code of library page."""
-        self.assertEquals(self.response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_library_shows_images(self):
         """Test library page shows images."""
         self.assertContains(self.response, 'src="/media/cache')
+
+
+class PhotoViewTestCase(UserTestCase):
+    """Test case for viewing a single image."""
+    def setUp(self):
+        super(PhotoViewTestCase, self).setUp()
+        photo_id = self.user.photos.last().id
+        url = reverse('images/photos/{}/'.format(photo_id))
+        self.response = self.client.get(url)
+
+    def test_photo_view_response(self):
+        self.assertEqual(self.response.status_code, 200)
