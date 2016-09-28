@@ -195,4 +195,13 @@ class AlbumViewTestCase(UserTestCase):
         self.response = self.client.get(url)
 
     def test_album_view_response(self):
+        """Test GETing album has status code 200."""
         self.assertEqual(self.response.status_code, 200)
+
+    def test_album_has_album_title(self):
+        """Test album contains album title."""
+        self.assertContains(self.response, self.album.title)
+
+    def test_album_has_album_description(self):
+        """Test album contains album title."""
+        self.assertContains(self.response, self.album.description)

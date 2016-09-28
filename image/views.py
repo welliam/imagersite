@@ -16,4 +16,6 @@ def image_view(request, photo_id):
         return render(request, 'photo_not_found.html')
 
 def album_view(request, album_id):
-    return render(request, 'album.html')
+    """Render detail view of album."""
+    album = request.user.albums.filter(id=album_id).first()
+    return render(request, 'album.html', dict(album=album))
