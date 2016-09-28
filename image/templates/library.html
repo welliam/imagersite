@@ -3,7 +3,18 @@
 {% block content %}
 
 {% for photo in photos %}
-<img src="{{ photo.photo.url }}">
+<div>
+  <div>
+    <img src="{{ photo.photo.url }}">
+  </div>
+
+{% if photo.title %}
+{{ photo.title }}
+{% else %}
+<i>untitled</i>
+{% endif %}
+</div>
+
 {% endfor %}
 
 {% endblock %}

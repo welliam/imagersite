@@ -37,3 +37,7 @@ input[type="text"], input[type="password"], input[type="email"] {
     display: block;
     color: grey;
 }
+
+img {
+    margin-top: 2em;
+}
