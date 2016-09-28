@@ -7,3 +7,10 @@ def library_view(request):
     return render(request, 'library.html', {
         'photos': request.user.photos.all()
     })
+
+
+def image_view(request, photo_id):
+    """Render an image."""
+    return render(request, 'library.html', {
+        'photos': request.user.photos.all()
+    })

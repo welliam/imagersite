@@ -158,8 +158,7 @@ class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
     def setUp(self):
         super(PhotoViewTestCase, self).setUp()
-        photo_id = self.user.photos.last().id
-        url = reverse('images/photos/{}/'.format(photo_id))
+        url = reverse('images', args=[self.user.photos.last().id])
         self.response = self.client.get(url)
 
     def test_photo_view_response(self):
