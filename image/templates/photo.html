@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}Photo{% endblock %}
+
+{% block content %}
+
+<h1>
+  {% if photo.title %}
+    {{ photo.title }}
+  {% else %}
+  <i>untitled</i>
+    {% endif %}
+</h1>
+
+<div><img src="{{ photo.photo.url }}" class="photofullsize"></div>
+
+<div class="photodescription">{{ photo.description }}</div>
+<div>Upload date: {{ photo.date_uploaded }}</div>
+
+{% endblock %}

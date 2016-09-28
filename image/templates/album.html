@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}Album{% endblock %}
+
+{% block content %}
+
+<h1>{{ album.title }}</h1>
+
+<div>{{ album.description }}</div>
+
+{% for photo in photos %}
+<img src="{{ photo.photo.url }}">
+{% endfor %}
+
+{% endblock %}
