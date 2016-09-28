@@ -16,6 +16,7 @@ def photo_path(instance, filename):
     return "{0}/{1}".format(instance.user.username, filename)
 
 
+
 @python_2_unicode_compatible
 class Photo(models.Model):
     """Information about photo."""

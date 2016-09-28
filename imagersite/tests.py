@@ -2,6 +2,14 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core import mail
+from factory.django import DjangoModelFactory, ImageField
+from image.models import Photo
+
+
+class PhotoFactory(DjangoModelFactory):
+    class Meta(object):
+        model = Photo
+    photo = ImageField()
 
 
 class AuthenticatedTestCase(TestCase):
@@ -51,6 +59,8 @@ class HomeViewTestCase(TestCase):
     def setUp(self):
         """Get the home directory and store the response."""
         self.response = self.client.get(reverse('home'))
+        self.user = User(username='test')
+        self.user.save()
 
     def test_home_view_status_code(self):
         """Test home view returns 200."""
@@ -73,8 +83,17 @@ class HomeViewTestCase(TestCase):
             self.response,
             'href="{}"'.format(reverse('auth_login'))
         )
-    
-    def test_home_view_has_random_iamge(self):
+
+    def test_home_view_has_random_image(self):
+        """Test home view has a random image."""
+        PhotoFactory(user=self.user).save()
+        self.client.get(reverse('home'))
+        self.assertContains(
+            self.response,
+            '<img src='
+        )
+
+    def test_home_view_static_image(self):
         """Test home view has a random image."""
         self.assertContains(
             self.response,

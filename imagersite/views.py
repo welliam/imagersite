@@ -6,7 +6,7 @@ def home_view(request):
     """Return rendered home page."""
     random_photo = Photo.objects.order_by("?").first()
     if random_photo:
-        random_photo = random_photo.url
+        random_photo = random_photo.photo.url
     else:
         random_photo = settings.STATIC_URL + 'bird.jpg'
     return render(request, 'home.html', context={"random_image_url": random_photo})
