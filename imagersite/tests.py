@@ -104,6 +104,32 @@ class HomeViewTestCase(TestCase):
         """Test random image is in context."""
         self.assertIn("random_image_url", self.response.context)
 
+    def auth_response(self):
+        """Authenticated response."""
+        self.client.force_login(self.user)
+        return self.client.get(reverse('home'))
+
+    def test_home_view_nonauth_nav_library(self):
+        """Test home view does not link to library in nav bar."""
+        expected = 'href="{}"'.format(reverse('library'))
+        self.assertContains(self.response, expected, count=0)
+
+    def test_home_view_nonauth_nav_profile(self):
+        """Test home view does not link to library in nav bar."""
+        expected = 'href="{}"'.format(reverse('library'))
+        self.assertContains(self.response, expected, count=0)
+
+    def test_home_view_auth_nav_library(self):
+        """Test authenticated home view links to library in nav bar."""
+        expected = 'href="{}"'.format(reverse('library'))
+        self.assertContains(self.auth_response(), expected)
+
+    def test_home_view_auth_nav_profile(self):
+        """Test authenticated home view links to library in nav bar."""
+        expected = 'href="{}"'.format(reverse('profile'))
+        self.assertContains(self.auth_response(), expected)
+
+
 class RegistrationViewTestCase(TestCase):
     """Test case for registration view."""
 
