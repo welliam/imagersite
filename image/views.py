@@ -1,5 +1,7 @@
 from django.shortcuts import render
-
+from django.views.generic.edit import FormView
+from django import forms
+from .models import Album
 
 def library_view(request):
     """Render a library."""
@@ -26,3 +28,21 @@ def album_view(request, album_id):
     album = request.user.albums.filter(id=album_id).first()
     photos = album.photos.all()
     return render(request, 'album.html', dict(album=album, photos=photos))
+
+
+
+class AddAlbumForm(forms.ModelForm):
+    """Add Albumb Form"""
+    class  Meta(object):
+        model = Album
+        fields = [
+            'title',
+            'description',
+            'published',
+        ]
+
+class AddAlbumView(FormView):
+    """Add Album View for adding albums."""
+    template_name = "add_album.html"
+    form_class = AddAlbumForm
+

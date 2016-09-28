@@ -217,3 +217,16 @@ class AlbumViewTestCase(UserTestCase):
         """Test album contains associated images."""
         for image in self.album.photos.all():
             self.assertContains(self.response, image.photo.url)
+
+class CreateAlbumTestCase(UserTestCase):
+    """Test case for creating albums."""
+    
+    def setUp(self):
+        """Create a setup."""
+        self.response = self.client.get(reverse('add_album'))
+
+    def test_get_create_url(self):
+        """Test getting create url."""
+        self.assertEqual(self.response.status_code, 200)
+
+    
