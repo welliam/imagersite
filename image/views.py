@@ -3,4 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 def library_view(request):
-    return render(request, 'library.html')
+    """Render a library."""
+    return render(request, 'library.html', {
+        'photos': request.user.photos.all()
+    })

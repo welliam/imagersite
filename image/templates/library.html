@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<img src="/media/bird.jpg">
+
+{% for photo in photos %}
+<img src="{{ photo.photo.url }}">
+{% endfor %}
+
 {% endblock %}

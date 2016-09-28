@@ -119,24 +119,26 @@ class LibraryTestCase(TestCase):
 
     def setUp(self):
         """Setup Library testcase."""
-    #   username = 'something'
-    #   password = 'somethingelse'
-        user = User(username='b')
-        user.save()
-        self.client.force_login(user)
+        self.user = User(username='acutebird')
+        self.user.save()
+        self.client.force_login(self.user)
         for i in range(10):
             PhotoFactory(
-                user=user,
+                user=self.user,
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
             ).save()
-        album = Album(user=user, title='Blue Pictures', description='A test album.')
+        album = Album(user=self.user, title='Blue Pictures', description='A test album.')
         album.save()
-        for photo in list(user.photos.all())[:3]:
+        for photo in list(self.user.photos.all())[:3]:
             album.photos.add(photo)
+        self.response = self.client.get(reverse('library'))
 
     def test_library_status_code(self):
         """Test status code of library page."""
-        response = self.client.get(reverse('library'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(self.response.status_code, 200)
 
+    def test_library_shows_images(self):
+        """Test library page shows images."""
+        url = self.user.photos.last().photo.url
+        self.assertContains(self.response, 'src="{}"'.format(url))
