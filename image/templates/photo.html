@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}Photo{% endblock %}
+
+{% block content %}
+
+<h1>
+  {% if photo.title %}
+    {{ photo.title }}
+  {% else %}
+  <i>untitled</i>
+    {% endif %}
+</h1>
+
+<img src="{{ photo.photo.url }}">
+
+{{ photo.description }}
+
+{% endblock %}

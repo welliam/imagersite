@@ -158,8 +158,15 @@ class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
     def setUp(self):
         super(PhotoViewTestCase, self).setUp()
-        url = reverse('images', args=[self.user.photos.last().id])
+        self.photo = self.user.photos.last()
+        url = reverse('images', args=[self.photo.id])
         self.response = self.client.get(url)
 
     def test_photo_view_response(self):
         self.assertEqual(self.response.status_code, 200)
+
+    def test_photo_view_has_title(self):
+        self.assertContains(self.response, self.photo.title)
+
+    def test_photo_view_has_description(self):
+        self.assertContains(self.response, self.photo.description)

@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
 
 def library_view(request):
     """Render a library."""
@@ -11,6 +10,6 @@ def library_view(request):
 
 def image_view(request, photo_id):
     """Render an image."""
-    return render(request, 'library.html', {
-        'photos': request.user.photos.all()
+    return render(request, 'photo.html', {
+        'photo': request.user.photos.filter(id=photo_id).first()
     })
