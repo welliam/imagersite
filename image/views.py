@@ -10,6 +10,8 @@ def library_view(request):
 
 def image_view(request, photo_id):
     """Render an image."""
-    return render(request, 'photo.html', {
-        'photo': request.user.photos.filter(id=photo_id).first()
-    })
+    photo = request.user.photos.filter(id=photo_id).first()
+    if photo:
+        return render(request, 'photo.html', dict(photo=photo))
+    else:
+        return render(request, 'photo_not_found.html')

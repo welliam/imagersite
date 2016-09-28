@@ -170,3 +170,7 @@ class PhotoViewTestCase(UserTestCase):
 
     def test_photo_view_has_description(self):
         self.assertContains(self.response, self.photo.description)
+
+    def test_photo_view_nonexistent_photo(self):
+        response = self.client.get(reverse('images', args=[999]))
+        self.assertContains(response, 'Photo not found')
