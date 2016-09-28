@@ -1,11 +1,13 @@
 from django.shortcuts import render
+from django.urls import reverse
 
 
 def library_view(request):
     """Render a library."""
-    return render(request, 'library.html', {
-        'photos': request.user.photos.all()
-    })
+    photos = request.user.photos.all()
+    for photo in photos:
+        photo.detail_url = reverse('images', args=[photo.pk])
+    return render(request, 'library.html', dict(photos=photos))
 
 
 def image_view(request, photo_id):

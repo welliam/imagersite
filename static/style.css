@@ -41,3 +41,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 img {
     margin-top: 2em;
 }
+
+div.libraryphoto {
+    display: inline-block;
+}

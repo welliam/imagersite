@@ -153,6 +153,12 @@ class LibraryTestCase(UserTestCase):
         """Test library page shows images."""
         self.assertContains(self.response, 'src="/media/cache')
 
+    def test_library_links_to_image(self):
+        """Test library page has links to images."""
+        for photo in self.user.photos.all():
+            url = "/images/photos/{}/".format(photo.pk)
+            self.assertContains(self.response, url)
+
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
