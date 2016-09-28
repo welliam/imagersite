@@ -5,8 +5,6 @@ from django.urls import reverse
 def library_view(request):
     """Render a library."""
     photos = request.user.photos.all()
-    for photo in photos:
-        photo.detail_url = reverse('images', args=[photo.pk])
     return render(request, 'library.html', dict(photos=photos))
 
 

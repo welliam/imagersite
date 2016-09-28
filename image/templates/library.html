@@ -13,7 +13,7 @@
   <div class="libraryphoto">
     <div>
       {% thumbnail photo.photo.path "50x50" crop="center" as img %}
-      <a href="{{ photo.detail_url }}">
+      <a href="{% url 'images' photo.pk %}">
         <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
       </a>
       {% endthumbnail %}
