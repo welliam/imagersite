@@ -9,4 +9,8 @@
 
 <div>{{ album.description }}</div>
 
+{% for photo in photos %}
+<img src="{{ photo.photo.url }}">
+{% endfor %}
+
 {% endblock %}

@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -129,14 +130,14 @@ class UserTestCase(TestCase):
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
             ).save()
-        album = Album(
+        self.album = Album(
             user=self.user,
             title='Blue Pictures',
             description='A test album.'
         )
-        album.save()
+        self.album.save()
         for photo in list(self.user.photos.all())[:3]:
-            album.photos.add(photo)
+            self.album.photos.add(photo)
 
 
 class LibraryTestCase(UserTestCase):
@@ -203,5 +204,10 @@ class AlbumViewTestCase(UserTestCase):
         self.assertContains(self.response, self.album.title)
 
     def test_album_has_album_description(self):
-        """Test album contains album title."""
+        """Test album contains album description."""
         self.assertContains(self.response, self.album.description)
+
+    def test_album_displays_images(self):
+        """Test album contains associated images."""
+        for image in self.album.photos.all():
+            self.assertContains(self.response, image.photo.url)

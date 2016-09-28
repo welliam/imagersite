@@ -4,7 +4,12 @@ from django.shortcuts import render
 def library_view(request):
     """Render a library."""
     photos = request.user.photos.all()
-    return render(request, 'library.html', dict(photos=photos))
+    albums = request.user.albums.all()
+    for album in albums:
+        if not album.cover:
+            album.nocover = True
+    context = dict(photos=photos, albums=albums)
+    return render(request, 'library.html', context)
 
 
 def image_view(request, photo_id):
@@ -15,7 +20,9 @@ def image_view(request, photo_id):
     else:
         return render(request, 'photo_not_found.html')
 
+
 def album_view(request, album_id):
     """Render detail view of album."""
     album = request.user.albums.filter(id=album_id).first()
-    return render(request, 'album.html', dict(album=album))
+    photos = album.photos.all()
+    return render(request, 'album.html', dict(album=album, photos=photos))
