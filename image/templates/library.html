@@ -6,34 +6,6 @@
 
 {% block content %}
 
-<h1>Photos</h1>
-
-{% if photos %}
-  {% for photo in photos %}
-
-  <div class="libraryphoto">
-    <div>
-      {% thumbnail photo.photo.path "50x50" crop="center" as img %}
-      <a href="{% url 'images' photo.pk %}">
-        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
-      </a>
-      {% endthumbnail %}
-    </div>
-
-    {% if photo.title %}
-      {{ photo.title }}
-    {% else %}
-      <i>untitled</i>
-    {% endif %}
-  </div>
-
-  {% endfor %}
-{% else %}
-  No photos!
-{% endif %}
-
-
-
 <h1>Albums</h1>
 
 {% if albums %}
@@ -61,5 +33,33 @@
 {% else %}
   No albums!
 {% endif %}
+
+
+<h1>Photos</h1>
+
+{% if photos %}
+  {% for photo in photos %}
+
+  <div class="libraryphoto">
+    <div>
+      {% thumbnail photo.photo.path "50x50" crop="center" as img %}
+      <a href="{% url 'images' photo.pk %}">
+        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
+      </a>
+      {% endthumbnail %}
+    </div>
+
+    {% if photo.title %}
+      {{ photo.title }}
+    {% else %}
+      <i>untitled</i>
+    {% endif %}
+  </div>
+
+  {% endfor %}
+{% else %}
+  No photos!
+{% endif %}
+
 
 {% endblock %}
