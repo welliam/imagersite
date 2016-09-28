@@ -130,14 +130,14 @@ class UserTestCase(TestCase):
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
             ).save()
-        self.album = Album(
+        album = Album(
             user=self.user,
             title='Blue Pictures',
             description='A test album.'
         )
-        self.album.save()
+        album.save()
         for photo in list(self.user.photos.all())[:3]:
-            self.album.photos.add(photo)
+            album.photos.add(photo)
 
 
 class LibraryTestCase(UserTestCase):
@@ -157,7 +157,7 @@ class LibraryTestCase(UserTestCase):
     def test_library_links_to_image(self):
         """Test library page has links to images."""
         for photo in self.user.photos.all():
-            url = "/images/photos/{}/".format(photo.pk)
+            url = reverse('images', args=[photo.pk])
             self.assertContains(self.response, url)
 
 
