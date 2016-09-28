@@ -13,8 +13,9 @@
     {% endif %}
 </h1>
 
-<img src="{{ photo.photo.url }}">
+<div><img src="{{ photo.photo.url }}" class="photofullsize"></div>
 
-{{ photo.description }}
+<div class="photodescription">{{ photo.description }}</div>
+<div>Upload date: {{ photo.date_uploaded }}</div>
 
 {% endblock %}

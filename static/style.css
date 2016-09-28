@@ -38,10 +38,10 @@ input[type="text"], input[type="password"], input[type="email"] {
     color: grey;
 }
 
-img {
-    margin-top: 2em;
-}
-
 div.libraryphoto {
     display: inline-block;
+}
+
+img.photofullsize {
+    margin: 3em;
 }
