@@ -229,4 +229,8 @@ class CreateAlbumTestCase(UserTestCase):
         """Test getting create url."""
         self.assertEqual(self.response.status_code, 200)
 
+    def test_form_rendered(self):
+        """Test for is rendering on page."""
+        self.assertContains(self.response, "</form>")
+
     
