@@ -160,6 +160,12 @@ class LibraryTestCase(UserTestCase):
             url = reverse('images', args=[photo.pk])
             self.assertContains(self.response, url)
 
+    def test_library_links_to_album(self):
+        """Test library page has links to images."""
+        for album in self.user.albums.all():
+            url = reverse('album', args=[album.pk])
+            self.assertContains(self.response, url)
+
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
@@ -181,7 +187,7 @@ class PhotoViewTestCase(UserTestCase):
         self.assertContains(self.response, self.photo.description)
 
     def test_photo_view_nonexistent_photo(self):
-        response = self.client.get(reverse('images', args=[999]))
+        response = self.client.get(reverse('images', args=[999999]))
         self.assertContains(response, 'Photo not found')
 
 
