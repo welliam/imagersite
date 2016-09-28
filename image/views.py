@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.urls import reverse
 
 
 def library_view(request):
@@ -15,3 +14,6 @@ def image_view(request, photo_id):
         return render(request, 'photo.html', dict(photo=photo))
     else:
         return render(request, 'photo_not_found.html')
+
+def album_view(request, album_id):
+    return render(request, 'album.html')

@@ -162,10 +162,12 @@ class LibraryTestCase(UserTestCase):
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
+
     def setUp(self):
+        """Set up for testing an photo."""
         super(PhotoViewTestCase, self).setUp()
         self.photo = self.user.photos.last()
-        url = reverse('images', args=[self.photo.id])
+        url = reverse('images', args=[self.photo.pk])
         self.response = self.client.get(url)
 
     def test_photo_view_response(self):
@@ -180,3 +182,17 @@ class PhotoViewTestCase(UserTestCase):
     def test_photo_view_nonexistent_photo(self):
         response = self.client.get(reverse('images', args=[999]))
         self.assertContains(response, 'Photo not found')
+
+
+class AlbumViewTestCase(UserTestCase):
+    """Test case for viewing an album."""
+
+    def setUp(self):
+        """Set up for testing an album."""
+        super(AlbumViewTestCase, self).setUp()
+        self.album = self.user.albums.last()
+        url = reverse('album', args=[self.album.pk])
+        self.response = self.client.get(url)
+
+    def test_album_view_response(self):
+        self.assertEqual(self.response.status_code, 200)
