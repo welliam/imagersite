@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sorl.thumbnail',
     'user_profile',
     'image',
 ]
@@ -137,6 +138,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 
+THUMBNAIL_DEBUG = DEBUG
 ACCOUNT_ACTIVATION_DAYS = 30
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 LOGIN_REDIRECT_URL = '/profile/'

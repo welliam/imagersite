@@ -140,5 +140,4 @@ class LibraryTestCase(TestCase):
 
     def test_library_shows_images(self):
         """Test library page shows images."""
-        url = self.user.photos.last().photo.url
-        self.assertContains(self.response, 'src="{}"'.format(url))
+        self.assertContains(self.response, 'src="/media/cache')
