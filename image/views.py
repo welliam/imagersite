@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django import forms
 from .models import Album
+from django.urls import reverse
+from django.http.response import HttpResponseRedirect
 
 def library_view(request):
     """Render a library."""
@@ -46,3 +48,9 @@ class AddAlbumView(FormView):
     template_name = "add_album.html"
     form_class = AddAlbumForm
 
+    def form_valid(self, form):
+        return HttpResponseRedirect(reverse('library'))
+    #Django is weird. Not as prop fails.
+    @property
+    def success_url(self):
+        return reverse('library')

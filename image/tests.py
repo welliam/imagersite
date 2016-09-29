@@ -218,12 +218,15 @@ class AlbumViewTestCase(UserTestCase):
         for image in self.album.photos.all():
             self.assertContains(self.response, image.photo.url)
 
+
 class CreateAlbumTestCase(UserTestCase):
     """Test case for creating albums."""
     
     def setUp(self):
         """Create a setup."""
+        super(CreateAlbumTestCase, self).setUp()
         self.response = self.client.get(reverse('add_album'))
+
 
     def test_get_create_url(self):
         """Test getting create url."""
@@ -233,4 +236,13 @@ class CreateAlbumTestCase(UserTestCase):
         """Test for is rendering on page."""
         self.assertContains(self.response, "</form>")
 
-    
+    def test_post_form(self):
+        """Test post redirects correctly."""
+        ct = self.response.context['csrf_token']
+        response = self.client.post(reverse('add_album'), {
+            'csrf_token': ct, 
+            'title': 'YeahWhatever',
+            'description': 'Text',
+            'published': "Public",
+        })
+        self.assertEqual(response.status_code, 302)
