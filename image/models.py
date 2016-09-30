@@ -32,7 +32,7 @@ class Photo(models.Model):
         null=True
     )
     title = models.CharField(max_length=128)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     date_published = models.DateTimeField(auto_now_add=True)
@@ -46,7 +46,7 @@ class Photo(models.Model):
 @python_2_unicode_compatible
 class Album(models.Model):
     title = models.CharField(max_length=128)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     user = models.ForeignKey(
         User,
         on_delete=models.deletion.CASCADE,

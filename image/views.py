@@ -1,8 +1,8 @@
 from django import forms
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from django.views.generic import CreateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
 from .models import Album, Photo
 
 
@@ -33,10 +33,10 @@ def album_view(request, album_id):
     return render(request, 'album.html', dict(album=album, photos=photos))
 
 
-
 class AddAlbumForm(forms.ModelForm):
     """Add Albumb Form"""
-    class  Meta(object):
+
+    class Meta(object):
         model = Album
         fields = [
             'title',
@@ -44,8 +44,11 @@ class AddAlbumForm(forms.ModelForm):
             'published',
         ]
 
+
 class UserCreateView(LoginRequiredMixin, CreateView):
     """View which attaches the request's user to the form being submitted."""
+
+    success_url = reverse_lazy('library')
 
     def form_valid(self, form):
         """Attach the user to the form."""
@@ -63,10 +66,6 @@ class AddAlbumView(UserCreateView):
         'published',
     ]
 
-    @property
-    def success_url(self):
-        return reverse('library')
-
 
 class AddPhotoView(UserCreateView):
     """Test Add Photo View for adding photos."""
@@ -79,6 +78,13 @@ class AddPhotoView(UserCreateView):
         'photo'
     ]
 
-    @property
-    def success_url(self):
-        return reverse('library')
+
+class EditPhotoView(UpdateView):
+    template_name = "edit_photo.html"
+    model = Photo
+    fields = [
+        'title',
+        'description',
+        'published'
+    ]
+    success_url = reverse_lazy('library')

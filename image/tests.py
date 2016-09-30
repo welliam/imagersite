@@ -222,7 +222,7 @@ class AlbumViewTestCase(UserTestCase):
 
 class CreateAlbumTestCase(UserTestCase):
     """Test case for creating albums."""
-    
+
     def setUp(self):
         """Create a setup."""
         super(CreateAlbumTestCase, self).setUp()
@@ -240,7 +240,7 @@ class CreateAlbumTestCase(UserTestCase):
         """Test post redirects correctly."""
         ct = self.response.context['csrf_token']
         data = {
-            'csrf_token': ct, 
+            'csrf_token': ct,
             'title': 'YeahWhatever',
             'description': 'Text',
             'published': "Public",
@@ -268,7 +268,7 @@ class CreatePhotoTestCase(UserTestCase):
     def test_status_code(self):
         """Test status code of add photo view."""
         self.assertEqual(self.response.status_code, 200)
-    
+
     def test_form_rendered(self):
         """Test form is rendered to html."""
         self.assertContains(self.response, '</form>')
@@ -294,3 +294,30 @@ class CreatePhotoTestCase(UserTestCase):
         self.client.logout()
         response = self.client.get(reverse('add_photo'))
         self.assertEqual(response.status_code, 302)
+
+
+class EditPhotoTestCase(UserTestCase):
+    """Edit photo test case."""
+
+    def setUp(self):
+        """Set up a photo to be edited."""
+        super(EditPhotoTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('edit_photo', args=[self.photo.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of edit photo view."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_edit_photo(self):
+        """Test editing a photo stores the updated value."""
+        new_title = self.photo.title + '!'
+        data = {
+            'title': new_title,
+            'published': 'Public'
+        }
+        response = self.client.post(self.url, data)
+        # import pdb; pdb.set_trace()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.photos.last().title, new_title)
