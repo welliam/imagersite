@@ -246,7 +246,6 @@ class CreateAlbumTestCase(UserTestCase):
             'published': "Public",
             'user': self.user.pk,
         }
-        # import pdb; pdb.set_trace()
         try:
             with transaction.atomic():
                 response = self.client.post(reverse('add_album'), data)
@@ -268,3 +267,7 @@ class CreatePhotoTestCase(UserTestCase):
     def test_status_code(self):
         """Test status code of add photo view."""
         self.assertEqual(self.response.status_code, 200)
+    
+    def test_form_rendered(self):
+        """Test form is rendered to html."""
+        self.assertContains(self.response, '</form>')
