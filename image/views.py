@@ -56,6 +56,7 @@ class AddAlbumView(CreateView):
     def form_valid(self,form):
         form.instance.user = self.request.user
         return super(AddAlbumView, self).form_valid(form)
+        
     @property
     def success_url(self):
         return reverse('library')   
@@ -71,3 +72,7 @@ class AddPhotoView(CreateView):
         'published',
         'photo'
     ]
+
+    @property
+    def success_url(self):
+        return reverse('library')  

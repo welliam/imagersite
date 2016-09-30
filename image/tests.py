@@ -252,7 +252,6 @@ class CreateAlbumTestCase(UserTestCase):
         except Exception as e:
             pass
         self.assertEqual(response.status_code, 302)
-        new_album = Album.objects.last()
         self.assertEqual(self.user.albums.last().title, data['title'])
 
 
@@ -271,3 +270,18 @@ class CreatePhotoTestCase(UserTestCase):
     def test_form_rendered(self):
         """Test form is rendered to html."""
         self.assertContains(self.response, '</form>')
+
+    def test_post_photo_form(self):
+        """Test photo redirects and posts."""
+        ct = self.response.context['csrf_token']
+        data = {
+            'csrf_token': ct,
+            'title': 'TestPhoto',
+            'description': 'Test Description.',
+            'published': 'Public',
+            'photo': PhotoFactory(user=self.user).photo.read(),
+        }
+        response = self.client.post(reverse('add_photo'), data)
+        self.assertEqual(response.status_code, 302)
+        new_photo = Photo.objects.last()
+        self.assertEqual(new_photo.title, data['title'])
