@@ -255,3 +255,4 @@ class CreateAlbumTestCase(UserTestCase):
             pass
         self.assertEqual(response.status_code, 302)
         new_album = Album.objects.last()
+        self.assertEqual(self.user.albums.last().title, data['title'])
