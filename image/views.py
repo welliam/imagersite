@@ -4,6 +4,7 @@ from django import forms
 from .models import Album
 from django.urls import reverse
 from django.http.response import HttpResponseRedirect
+from django.views.generic import CreateView
 
 def library_view(request):
     """Render a library."""
@@ -43,14 +44,19 @@ class AddAlbumForm(forms.ModelForm):
             'published',
         ]
 
-class AddAlbumView(FormView):
+class AddAlbumView(CreateView):
     """Add Album View for adding albums."""
     template_name = "add_album.html"
-    form_class = AddAlbumForm
-
-    def form_valid(self, form):
-        return HttpResponseRedirect(reverse('library'))
-    #Django is weird. Not as prop fails.
+    # form_class = AddAlbumForm
+    model = Album
+    fields = [
+        'title',
+        'description',
+        'published',
+    ]
+    def form_valid(self,form):
+        form.instance.user = self.request.user
+        return super(AddAlbumView, self).form_valid(form)
     @property
     def success_url(self):
-        return reverse('library')
+        return reverse('library')   

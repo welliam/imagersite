@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
 from .models import Album, Photo
+from django.db import transaction
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -239,10 +240,18 @@ class CreateAlbumTestCase(UserTestCase):
     def test_post_form(self):
         """Test post redirects correctly."""
         ct = self.response.context['csrf_token']
-        response = self.client.post(reverse('add_album'), {
+        data = {
             'csrf_token': ct, 
             'title': 'YeahWhatever',
             'description': 'Text',
             'published': "Public",
-        })
+            'user': self.user.pk,
+        }
+        # import pdb; pdb.set_trace()
+        try:
+            with transaction.atomic():
+                response = self.client.post(reverse('add_album'), data)
+        except Exception as e:
+            pass
         self.assertEqual(response.status_code, 302)
+        new_album = Album.objects.last()
