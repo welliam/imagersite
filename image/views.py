@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django import forms
-from .models import Album
+from .models import Album, Photo
 from django.urls import reverse
 from django.http.response import HttpResponseRedirect
 from django.views.generic import CreateView
@@ -47,7 +47,6 @@ class AddAlbumForm(forms.ModelForm):
 class AddAlbumView(CreateView):
     """Add Album View for adding albums."""
     template_name = "add_album.html"
-    # form_class = AddAlbumForm
     model = Album
     fields = [
         'title',
@@ -60,3 +59,15 @@ class AddAlbumView(CreateView):
     @property
     def success_url(self):
         return reverse('library')   
+
+
+class AddPhotoView(CreateView):
+    """Test Add Photo View for adding photos."""
+    template_name = "add_photo.html"
+    model = Photo
+    fields = [
+        'title',
+        'description',
+        'published',
+        'photo'
+    ]

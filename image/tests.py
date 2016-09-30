@@ -228,7 +228,6 @@ class CreateAlbumTestCase(UserTestCase):
         super(CreateAlbumTestCase, self).setUp()
         self.response = self.client.get(reverse('add_album'))
 
-
     def test_get_create_url(self):
         """Test getting create url."""
         self.assertEqual(self.response.status_code, 200)
@@ -256,3 +255,16 @@ class CreateAlbumTestCase(UserTestCase):
         self.assertEqual(response.status_code, 302)
         new_album = Album.objects.last()
         self.assertEqual(self.user.albums.last().title, data['title'])
+
+
+class CreatePhotoTestCase(UserTestCase):
+    """Add Photo test case."""
+
+    def setUp(self):
+        """Create a setup."""
+        super(CreatePhotoTestCase, self).setUp()
+        self.response = self.client.get(reverse('add_photo'))
+
+    def test_status_code(self):
+        """Test status code of add photo view."""
+        self.assertEqual(self.response.status_code, 200)
