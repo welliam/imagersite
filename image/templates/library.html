@@ -15,9 +15,9 @@
     <div>
       <a href="{% url 'album' album.pk %}">
         {% if album.nocover %}
-          <img src="{% static "nocover.jpg" %}" width="50px" height="50px">
+          <img src="{% static "nocover.jpg" %}" width="100px" height="100px">
         {% else %}
-          {% thumbnail album.cover_url "50x50" crop="center" as img %}
+          {% thumbnail album.cover_url "100x100" crop="center" as img %}
             <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
           {% endthumbnail %}
         {% endif %}
@@ -44,7 +44,7 @@
 
   <div class="libraryphoto">
     <div>
-      {% thumbnail photo.photo.path "50x50" crop="center" as img %}
+      {% thumbnail photo.photo.path "100x100" crop="center" as img %}
       <a href="{% url 'images' photo.pk %}">
         <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
       </a>
