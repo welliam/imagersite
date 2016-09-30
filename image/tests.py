@@ -285,3 +285,4 @@ class CreatePhotoTestCase(UserTestCase):
         self.assertEqual(response.status_code, 302)
         new_photo = Photo.objects.last()
         self.assertEqual(new_photo.title, data['title'])
+        self.assertTrue(new_photo.user is not None)

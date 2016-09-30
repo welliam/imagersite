@@ -44,7 +44,16 @@ class AddAlbumForm(forms.ModelForm):
             'published',
         ]
 
-class AddAlbumView(CreateView):
+class UserCreateView(CreateView):
+    """View which attaches the request's user to the form being submitted."""
+
+    def form_valid(self, form):
+        """Attach the user to the form."""
+        form.instance.user = self.request.user
+        return super(UserCreateView, self).form_valid(form)
+
+
+class AddAlbumView(UserCreateView):
     """Add Album View for adding albums."""
     template_name = "add_album.html"
     model = Album
@@ -53,16 +62,13 @@ class AddAlbumView(CreateView):
         'description',
         'published',
     ]
-    def form_valid(self,form):
-        form.instance.user = self.request.user
-        return super(AddAlbumView, self).form_valid(form)
-        
+
     @property
     def success_url(self):
-        return reverse('library')   
+        return reverse('library')
 
 
-class AddPhotoView(CreateView):
+class AddPhotoView(UserCreateView):
     """Test Add Photo View for adding photos."""
     template_name = "add_photo.html"
     model = Photo
@@ -75,4 +81,4 @@ class AddPhotoView(CreateView):
 
     @property
     def success_url(self):
-        return reverse('library')  
+        return reverse('library')
