@@ -246,13 +246,15 @@ class CreateAlbumTestCase(UserTestCase):
             'published': "Public",
             'user': self.user.pk,
         }
-        try:
-            with transaction.atomic():
-                response = self.client.post(reverse('add_album'), data)
-        except Exception as e:
-            pass
+        response = self.client.post(reverse('add_album'), data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.user.albums.last().title, data['title'])
+
+    def test_album_create_page_301(self):
+        """Test create photo page returns 301 for unauthenticated user."""
+        self.client.logout()
+        response = self.client.get(reverse('add_photo'))
+        self.assertEqual(response.status_code, 302)
 
 
 class CreatePhotoTestCase(UserTestCase):
@@ -286,3 +288,9 @@ class CreatePhotoTestCase(UserTestCase):
         new_photo = Photo.objects.last()
         self.assertEqual(new_photo.title, data['title'])
         self.assertTrue(new_photo.user is not None)
+
+    def test_photo_create_page_301(self):
+        """Test create photo page returns 301 for unauthenticated user."""
+        self.client.logout()
+        response = self.client.get(reverse('add_photo'))
+        self.assertEqual(response.status_code, 302)

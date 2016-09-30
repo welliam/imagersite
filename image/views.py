@@ -1,10 +1,10 @@
-from django.shortcuts import render
-from django.views.generic.edit import FormView
 from django import forms
-from .models import Album, Photo
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.http.response import HttpResponseRedirect
 from django.views.generic import CreateView
+from .models import Album, Photo
+
 
 def library_view(request):
     """Render a library."""
@@ -44,7 +44,7 @@ class AddAlbumForm(forms.ModelForm):
             'published',
         ]
 
-class UserCreateView(CreateView):
+class UserCreateView(LoginRequiredMixin, CreateView):
     """View which attaches the request's user to the form being submitted."""
 
     def form_valid(self, form):
