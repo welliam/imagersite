@@ -88,3 +88,15 @@ class EditPhotoView(UpdateView):
         'published'
     ]
     success_url = reverse_lazy('library')
+
+
+class EditAlbumView(UpdateView):
+    template_name = "edit_album.html"
+    model = Album
+    fields = [
+        'title',
+        'description',
+        'published',
+        'photos'
+    ]
+    success_url = reverse_lazy('library')

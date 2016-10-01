@@ -4,7 +4,8 @@ from .views import (
     album_view,
     AddAlbumView,
     AddPhotoView,
-    EditPhotoView
+    EditPhotoView,
+    EditAlbumView
 )
 from django.conf.urls import url
 
@@ -21,4 +22,9 @@ urlpatterns = [
 
     url(r'album/add', AddAlbumView.as_view(), name='add_album'),
     url(r'album/(?P<album_id>[0-9]+)/$', album_view, name='album'),
+    url(
+        r'album/(?P<pk>[0-9]+)/edit/$',
+        EditAlbumView.as_view(),
+        name='edit_album'
+    ),
 ]

@@ -318,6 +318,32 @@ class EditPhotoTestCase(UserTestCase):
             'published': 'Public'
         }
         response = self.client.post(self.url, data)
-        # import pdb; pdb.set_trace()
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.user.photos.last().title, new_title)
+
+
+class EditAlbumTestCase(UserTestCase):
+    """Edit album test case."""
+
+    def setUp(self):
+        """Set up a album to be edited."""
+        super(EditAlbumTestCase, self).setUp()
+        self.album = self.user.albums.last()
+        self.url = reverse('edit_album', args=[self.album.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_edit_album(self):
+        """Test editing a album stores the updated value."""
+        new_title = self.album.title + '?!'
+        data = {
+            'title': new_title,
+            'published': 'Shared',
+            'photos': [p.pk for p in self.album.photos.all()]
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.albums.last().title, new_title)

@@ -42,6 +42,9 @@ class Photo(models.Model):
         default='Public'
     )
 
+    def __str__(self):
+        return self.title
+
 
 @python_2_unicode_compatible
 class Album(models.Model):
