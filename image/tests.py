@@ -238,13 +238,10 @@ class CreateAlbumTestCase(UserTestCase):
 
     def test_post_form(self):
         """Test post redirects correctly."""
-        ct = self.response.context['csrf_token']
         data = {
-            'csrf_token': ct,
             'title': 'YeahWhatever',
             'description': 'Text',
-            'published': "Public",
-            'user': self.user.pk,
+            'published': 'Public',
         }
         response = self.client.post(reverse('add_album'), data)
         self.assertEqual(response.status_code, 302)
@@ -355,5 +352,15 @@ class EditAlbumTestCase(UserTestCase):
         p = PhotoFactory(user=other_user)
         p.save()
         data = dict(photos=[p.pk], title='album', published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_set_cover_from_other_user(self):
+        """Test that users cannot set a cover from another user."""
+        other_user = User(username='whoever')
+        other_user.save()
+        p = PhotoFactory(user=other_user)
+        p.save()
+        data = dict(cover=p.pk, title='album', published='Public')
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)

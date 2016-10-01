@@ -33,18 +33,6 @@ def album_view(request, album_id):
     return render(request, 'album.html', dict(album=album, photos=photos))
 
 
-class AddAlbumForm(forms.ModelForm):
-    """Add Albumb Form"""
-
-    class Meta(object):
-        model = Album
-        fields = [
-            'title',
-            'description',
-            'published',
-        ]
-
-
 class UserCreateView(LoginRequiredMixin, CreateView):
     """View which attaches the request's user to the form being submitted."""
 
@@ -56,15 +44,54 @@ class UserCreateView(LoginRequiredMixin, CreateView):
         return super(UserCreateView, self).form_valid(form)
 
 
+class EditAlbumForm(forms.ModelForm):
+    """Form for editing albums.
+
+    Ensures one can only add photos from their own album."""
+
+    class Meta(object):
+        model = Album
+
+        fields = [
+            'title',
+            'description',
+            'published',
+            'photos',
+            'cover'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        """Limit the photo field's queryset to just photos from this user."""
+        user = kwargs.pop('user')
+        super(EditAlbumForm, self).__init__(*args, **kwargs)
+        queryset = Photo.objects.filter(user=user)
+        self.fields['photos'].queryset = queryset
+        self.fields['cover'].queryset = queryset
+
+
 class AddAlbumView(UserCreateView):
     """Add Album View for adding albums."""
     template_name = "add_album.html"
     model = Album
-    fields = [
-        'title',
-        'description',
-        'published',
-    ]
+    form_class = EditAlbumForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AddAlbumView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+
+class EditAlbumView(UpdateView):
+    """View for editing albums."""
+    template_name = "edit_album.html"
+    model = Album
+    success_url = reverse_lazy('library')
+    form_class = EditAlbumForm
+
+    def get_form_kwargs(self):
+        kwargs = super(EditAlbumView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
 
 class AddPhotoView(UserCreateView):
@@ -80,6 +107,7 @@ class AddPhotoView(UserCreateView):
 
 
 class EditPhotoView(UpdateView):
+    """View for modifying photo information."""
     template_name = "edit_photo.html"
     model = Photo
     fields = [
@@ -88,28 +116,3 @@ class EditPhotoView(UpdateView):
         'published'
     ]
     success_url = reverse_lazy('library')
-
-
-class EditAlbumForm(forms.ModelForm):
-    """ https://groups.google.com/forum/#!topic/django-users/nLKDY3arQag """
-    class Meta(object):
-        model = Album
-
-        fields = [
-            'title',
-            'description',
-            'published',
-            'photos'
-        ]
-
-    def __init__(self, *args, **kwargs):
-        super(EditAlbumForm, self).__init__(*args, **kwargs)
-        queryset = Photo.objects.filter(user=self.instance.user)
-        self.fields['photos'].queryset = queryset
-
-
-class EditAlbumView(UpdateView):
-    template_name = "edit_album.html"
-    model = Album
-    success_url = reverse_lazy('library')
-    form_class = EditAlbumForm

@@ -24,11 +24,13 @@
       </a>
     </div>
 
-  {% if album.title %}
-  {{ album.title }}
-  {% else %}
-  <i>untitled</i>
-  {% endif %}
+    <a href="{% url 'album' album.pk %}">
+      {% if album.title %}
+        {{ album.title }}
+      {% else %}
+        <i>untitled</i>
+      {% endif %}
+    </a>
   </div>
 
   {% endfor %}

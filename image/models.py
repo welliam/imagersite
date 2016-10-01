@@ -57,12 +57,14 @@ class Album(models.Model):
     )
     photos = models.ManyToManyField(
         Photo,
-        related_name='albums'
+        related_name='albums',
+        blank=True
     )
     cover = models.ForeignKey(
         Photo,
         on_delete=models.deletion.CASCADE,
         related_name='cover_for',
+        blank=True,
         null=True
     )
     date_created = models.DateTimeField(auto_now_add=True)
@@ -71,5 +73,5 @@ class Album(models.Model):
     published = models.CharField(
         max_length=7,
         choices=PUB_CHOICES,
-        default='Public'
+        default='Public',
     )
