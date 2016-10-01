@@ -347,3 +347,13 @@ class EditAlbumTestCase(UserTestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.user.albums.last().title, new_title)
+
+    def test_add_photo_from_other_user(self):
+        """Test that users cannot add a photo from another user."""
+        other_user = User(username='whoever')
+        other_user.save()
+        p = PhotoFactory(user=other_user)
+        p.save()
+        data = dict(photos=[p.pk], title='album', published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)

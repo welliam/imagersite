@@ -90,13 +90,26 @@ class EditPhotoView(UpdateView):
     success_url = reverse_lazy('library')
 
 
+
+class EditAlbumForm(forms.ModelForm):
+    """ https://groups.google.com/forum/#!topic/django-users/nLKDY3arQag """
+    class Meta(object):
+        model = Album
+
+        fields = [
+            'title',
+            'description',
+            'published',
+            'photos'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(EditAlbumForm, self).__init__(*args, **kwargs)
+        self.fields['photos'].queryset = Photo.objects.filter(user=self.instance.user)
+
+
 class EditAlbumView(UpdateView):
     template_name = "edit_album.html"
     model = Album
-    fields = [
-        'title',
-        'description',
-        'published',
-        'photos'
-    ]
     success_url = reverse_lazy('library')
+    form_class = EditAlbumForm
