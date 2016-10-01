@@ -29,8 +29,11 @@ def image_view(request, photo_id):
 def album_view(request, album_id):
     """Render detail view of album."""
     album = request.user.albums.filter(id=album_id).first()
-    photos = album.photos.all()
-    return render(request, 'album.html', dict(album=album, photos=photos))
+    if album:
+        photos = album.photos.all()
+        return render(request, 'album.html', dict(album=album, photos=photos))
+    else:
+        return render(request, 'album_not_found.html')
 
 
 class UserCreateView(LoginRequiredMixin, CreateView):

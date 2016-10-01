@@ -219,6 +219,10 @@ class AlbumViewTestCase(UserTestCase):
         for image in self.album.photos.all():
             self.assertContains(self.response, image.photo.url)
 
+    def test_photo_view_nonexistent_album(self):
+        response = self.client.get(reverse('album', args=[999999]))
+        self.assertContains(response, 'Album not found')
+
 
 class CreateAlbumTestCase(UserTestCase):
     """Test case for creating albums."""
