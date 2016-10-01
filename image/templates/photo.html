@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 
-{% block title %}Photo{% endblock %}
+{% block title %}
+  Photo {% if photo.title %} - {{ photo.title }} {% endif %}
+{% endblock %}
 
 {% block content %}
+
 
 <h1>
   {% if photo.title %}
@@ -12,10 +15,12 @@
   <i>untitled</i>
     {% endif %}
 </h1>
+<a href="{% url 'edit_photo' photo.pk %}">Edit</a>
 
 <div><img src="{{ photo.photo.url }}" class="photofullsize"></div>
 
 <div class="photodescription">{{ photo.description }}</div>
 <div>Upload date: {{ photo.date_uploaded }}</div>
+<div>Last modified: {{ photo.date_modified }}</div>
 
 {% endblock %}

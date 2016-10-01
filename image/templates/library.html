@@ -8,62 +8,70 @@
 
 <h1>Albums</h1>
 
-{% if albums %}
-  {% for album in albums %}
+<div><a href="{% url 'add_album' %}">Add album</a></div>
 
-  <div>
-    <div>
-      <a href="{% url 'album' album.pk %}">
-        {% if album.nocover %}
-          <img src="{% static "nocover.jpg" %}" width="100px" height="100px">
-        {% else %}
-          {% thumbnail album.cover.photo.path "100x100" crop="center" format="PNG" as img %}
-            <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
-          {% endthumbnail %}
-        {% endif %}
-      </a>
-    </div>
+<div>
+  {% if albums %}
+    {% for album in albums %}
 
-    <a href="{% url 'album' album.pk %}">
-      {% if album.title %}
-        {{ album.title }}
-      {% else %}
-        <i>untitled</i>
-      {% endif %}
-    </a>
-  </div>
+      <div>
+        <div>
+          <a href="{% url 'album' album.pk %}">
+            {% if album.nocover %}
+              <img src="{% static "nocover.jpg" %}" width="100px" height="100px">
+            {% else %}
+              {% thumbnail album.cover.photo.path "100x100" crop="center" format="PNG" as img %}
+              <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
+            {% endthumbnail %}
+          {% endif %}
+          </a>
+        </div>
 
-  {% endfor %}
-{% else %}
-  No albums!
-{% endif %}
+        <a href="{% url 'album' album.pk %}">
+          {% if album.title %}
+            {{ album.title }}
+          {% else %}
+            <i>untitled</i>
+          {% endif %}
+        </a>
+      </div>
+
+    {% endfor %}
+  {% else %}
+    No albums!
+  {% endif %}
+</div>
 
 
 <h1>Photos</h1>
 
-{% if photos %}
-  {% for photo in photos %}
+<div><a href="{% url 'add_photo' %}">Add photo</a></div>
 
-  <div class="libraryphoto">
-    <div>
-      {% thumbnail photo.photo.path "100x100" crop="center" format="PNG" as img %}
-      <a href="{% url 'images' photo.pk %}">
-        <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
-      </a>
-      {% endthumbnail %}
-    </div>
+<div>
+  {% if photos %}
+    {% for photo in photos %}
 
-    {% if photo.title %}
-      {{ photo.title }}
-    {% else %}
-      <i>untitled</i>
-    {% endif %}
-  </div>
+      <div class="libraryphoto">
+        <div>
+          {% thumbnail photo.photo.path "100x100" crop="center" format="PNG" as img %}
+          <a href="{% url 'images' photo.pk %}">
+            <img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}">
+          </a>
+        {% endthumbnail %}
+        </div>
 
-  {% endfor %}
-{% else %}
-  No photos!
-{% endif %}
+        {% if photo.title %}
+          {{ photo.title }}
+        {% else %}
+          <i>untitled</i>
+        {% endif %}
+      </div>
+
+    {% endfor %}
+  {% else %}
+    No photos!
+  {% endif %}
+</div>
 
 
 {% endblock %}

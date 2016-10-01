@@ -191,6 +191,11 @@ class PhotoViewTestCase(UserTestCase):
         response = self.client.get(reverse('images', args=[999999]))
         self.assertContains(response, 'Photo not found')
 
+    def test_photo_view_has_edit_link(self):
+        link = reverse('edit_photo', args=[self.photo.pk])
+        self.assertContains(self.response, 'href="{}"'.format(link))
+
+
 
 class AlbumViewTestCase(UserTestCase):
     """Test case for viewing an album."""
@@ -219,9 +224,13 @@ class AlbumViewTestCase(UserTestCase):
         for image in self.album.photos.all():
             self.assertContains(self.response, image.photo.url)
 
-    def test_photo_view_nonexistent_album(self):
+    def test_album_view_nonexistent_album(self):
         response = self.client.get(reverse('album', args=[999999]))
         self.assertContains(response, 'Album not found')
+
+    def test_album_view_has_edit_link(self):
+        link = reverse('edit_album', args=[self.album.pk])
+        self.assertContains(self.response, 'href="{}"'.format(link))
 
 
 class CreateAlbumTestCase(UserTestCase):

@@ -5,12 +5,16 @@
 
 {% block content %}
 
-<h1>{{ album.title }}</h1>
+  <h1>{{ album.title }}</h1>
 
-<div>{{ album.description }}</div>
+  <div>{{ album.description }}</div>
 
-{% for photo in photos %}
-<img src="{{ photo.photo.url }}">
-{% endfor %}
+  <a href="{% url 'edit_album' album.pk %}" >Edit</a>
+
+  <div>
+    {% for photo in photos %}
+      <img src="{{ photo.photo.url }}">
+    {% endfor %}
+  </div>
 
 {% endblock %}
