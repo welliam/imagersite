@@ -39,6 +39,9 @@ class UserProfile(models.Model):
     def __repr__(self):
         return 'UserProfile(first_name={})'.format(self.user.first_name)
 
+    def __str__(self):
+        return '{}'.format(self.user.username)
+
 
 @receiver(models.signals.post_save, sender=User)
 def create_profile(sender, **kwargs):

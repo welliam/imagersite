@@ -75,3 +75,6 @@ class Album(models.Model):
         choices=PUB_CHOICES,
         default='Public',
     )
+
+    def __str__(self):
+        return '{}'.format(self.title)
