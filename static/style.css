@@ -46,6 +46,10 @@ div.libraryobject {
     padding: 0.25em;
 }
 
+img {
+    max-width: 100%;
+}
+
 img.photofullsize {
     margin: 3em;
 }
