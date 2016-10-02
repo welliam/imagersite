@@ -14,7 +14,7 @@
   {% if albums %}
     {% for album in albums %}
 
-      <div>
+      <div class="libraryobject">
         <div>
           <a href="{% url 'album' album.pk %}">
             {% if album.nocover %}
@@ -51,7 +51,7 @@
   {% if photos %}
     {% for photo in photos %}
 
-      <div class="libraryphoto">
+      <div class="libraryobject">
         <div>
           {% thumbnail photo.photo.path "100x100" crop="center" format="PNG" as img %}
           <a href="{% url 'images' photo.pk %}">
