@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.http import Http404
 from .models import Album, Photo
 
 
@@ -111,6 +112,12 @@ class DeleteAlbumView(DeleteView):
     model = Album
     success_url = reverse_lazy('library')
 
+    def get_object(self, queryset=None):
+        album = super(DeleteAlbumView, self).get_object()
+        if album.user != self.request.user:
+            raise Http404
+        return album
+
 
 class AddPhotoView(UserCreateView):
     """Test Add Photo View for adding photos."""
@@ -141,3 +148,9 @@ class DeletePhotoView(DeleteView):
     template_name = "confirm_delete_photo.html"
     model = Photo
     success_url = reverse_lazy('library')
+
+    def get_object(self, queryset=None):
+        photo = super(DeletePhotoView, self).get_object()
+        if photo.user != self.request.user:
+            raise Http404
+        return photo

@@ -408,6 +408,16 @@ class DeleteAlbumTestCase(UserTestCase):
         self.client.post(self.url)
         self.assertNotIn(self.album, self.user.albums.all())
 
+    def test_delete_other_users_album(self):
+        """Test user cannot delete another user's album."""
+        other_user = User(username='whoever')
+        other_user.save()
+        album = self.user.albums.last()
+        self.client.force_login(other_user)
+        response = self.client.post(self.url)
+        self.assertNotEqual(response.status_code, 302)
+        self.assertIn(album, Album.objects.all())
+
 
 class DeletePhotoTestCase(UserTestCase):
     def setUp(self):
@@ -426,3 +436,13 @@ class DeletePhotoTestCase(UserTestCase):
         self.assertIn(self.photo, self.user.photos.all())
         self.client.post(self.url)
         self.assertNotIn(self.photo, self.user.photos.all())
+
+    def test_delete_other_users_photo(self):
+        """Test user cannot delete another user's photo."""
+        other_user = User(username='whoever')
+        other_user.save()
+        photo = self.user.photos.last()
+        self.client.force_login(other_user)
+        response = self.client.post(self.url)
+        self.assertNotEqual(response.status_code, 302)
+        self.assertIn(photo, Photo.objects.all())
