@@ -2,7 +2,7 @@ from django import forms
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from .models import Album, Photo
 
 
@@ -105,6 +105,13 @@ class EditAlbumView(UpdateView):
         return kwargs
 
 
+class DeleteAlbumView(DeleteView):
+    """View for deleting albums."""
+    template_name = "confirm_delete_album.html"
+    model = Album
+    success_url = reverse_lazy('library')
+
+
 class AddPhotoView(UserCreateView):
     """Test Add Photo View for adding photos."""
     template_name = "add_photo.html"
@@ -126,4 +133,11 @@ class EditPhotoView(UpdateView):
         'description',
         'published'
     ]
+    success_url = reverse_lazy('library')
+
+
+class DeletePhotoView(DeleteView):
+    """View for deleting photos."""
+    template_name = "confirm_delete_photo.html"
+    model = Photo
     success_url = reverse_lazy('library')

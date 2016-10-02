@@ -10,6 +10,7 @@
   <div>{{ album.description }}</div>
 
   <a href="{% url 'edit_album' album.pk %}" >Edit</a>
+  <a href="{% url 'delete_album' album.pk %}" >Delete</a>
 
   <div>
     {% for photo in photos %}

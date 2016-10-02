@@ -62,7 +62,6 @@ class Album(models.Model):
     )
     cover = models.ForeignKey(
         Photo,
-        on_delete=models.deletion.CASCADE,
         related_name='cover_for',
         blank=True,
         null=True

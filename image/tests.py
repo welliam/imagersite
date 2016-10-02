@@ -336,7 +336,7 @@ class EditAlbumTestCase(UserTestCase):
     """Edit album test case."""
 
     def setUp(self):
-        """Set up a album to be edited."""
+        """Set up an album to be edited."""
         super(EditAlbumTestCase, self).setUp()
         self.album = self.user.albums.last()
         self.url = reverse('edit_album', args=[self.album.pk])
@@ -347,7 +347,7 @@ class EditAlbumTestCase(UserTestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_edit_album(self):
-        """Test editing a album stores the updated value."""
+        """Test editing an album stores the updated value."""
         new_title = self.album.title + '?!'
         data = {
             'title': new_title,
@@ -386,3 +386,43 @@ class EditAlbumTestCase(UserTestCase):
         data = dict(cover=p.pk, title='album', published='Public')
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
+
+
+class DeleteAlbumTestCase(UserTestCase):
+    """Delete album test case."""
+
+    def setUp(self):
+        """Set up an album to be deleted."""
+        super(DeleteAlbumTestCase, self).setUp()
+        self.album = self.user.albums.last()
+        self.url = reverse('delete_album', args=[self.album.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_post(self):
+        """Test posting to delete view deletes corresponding album."""
+        self.assertIn(self.album, self.user.albums.all())
+        self.client.post(self.url)
+        self.assertNotIn(self.album, self.user.albums.all())
+
+
+class DeletePhotoTestCase(UserTestCase):
+    def setUp(self):
+        """Set up a photo to be deleted."""
+        super(DeletePhotoTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('delete_photo', args=[self.photo.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_post(self):
+        """Test posting to delete view deletes corresponding photo."""
+        self.assertIn(self.photo, self.user.photos.all())
+        self.client.post(self.url)
+        self.assertNotIn(self.photo, self.user.photos.all())

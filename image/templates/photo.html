@@ -15,7 +15,9 @@
   <i>untitled</i>
     {% endif %}
 </h1>
+
 <a href="{% url 'edit_photo' photo.pk %}">Edit</a>
+<a href="{% url 'delete_photo' photo.pk %}" >Delete</a>
 
 <div><img src="{{ photo.photo.url }}" class="photofullsize"></div>
 

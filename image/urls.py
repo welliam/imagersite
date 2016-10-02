@@ -1,11 +1,15 @@
 from .views import (
     library_view,
+
     image_view,
-    album_view,
-    AddAlbumView,
     AddPhotoView,
     EditPhotoView,
-    EditAlbumView
+    DeletePhotoView,
+
+    album_view,
+    AddAlbumView,
+    EditAlbumView,
+    DeleteAlbumView,
 )
 from django.conf.urls import url
 
@@ -19,6 +23,11 @@ urlpatterns = [
         EditPhotoView.as_view(),
         name='edit_photo'
     ),
+    url(
+        r'photos/(?P<pk>[0-9]+)/delete/$',
+        DeletePhotoView.as_view(),
+        name='delete_photo'
+    ),
 
     url(r'album/add', AddAlbumView.as_view(), name='add_album'),
     url(r'album/(?P<album_id>[0-9]+)/$', album_view, name='album'),
@@ -26,5 +35,10 @@ urlpatterns = [
         r'album/(?P<pk>[0-9]+)/edit/$',
         EditAlbumView.as_view(),
         name='edit_album'
+    ),
+    url(
+        r'album/(?P<pk>[0-9]+)/delete/$',
+        DeleteAlbumView.as_view(),
+        name='delete_album'
     ),
 ]
