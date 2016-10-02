@@ -71,6 +71,14 @@ class EditAlbumForm(forms.ModelForm):
         self.fields['photos'].queryset = queryset
         self.fields['cover'].queryset = queryset
 
+    def clean(self):
+        """Ensure an album's cover is in its photos."""
+        cleaned_data = super(EditAlbumForm, self).clean()
+        cover = cleaned_data.get('cover')
+        if cover and cover not in cleaned_data.get('photos'):
+            error = forms.ValidationError("Cover not in album's photos.")
+            self.add_error('cover', error)
+
 
 class AddAlbumView(UserCreateView):
     """Add Album View for adding albums."""

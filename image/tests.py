@@ -368,6 +368,15 @@ class EditAlbumTestCase(UserTestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
 
+    def test_set_cover_not_in_photos(self):
+        """Test that users cannot set a cover not in the album's photos."""
+        p1 = self.user.photos.first()
+        p2 = self.user.photos.last()
+        self.assertNotEqual(p1, p2)  # test is useless otherwise
+        data = dict(cover=p1.pk, title='album', photos=[p2.pk], published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+
     def test_set_cover_from_other_user(self):
         """Test that users cannot set a cover from another user."""
         other_user = User(username='whoever')
