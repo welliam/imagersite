@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'registration',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -86,8 +87,8 @@ DATABASES = {
         'NAME': os.environ['DBNAME'],
         'USER': os.environ['DBUSER'],
         'PASSWORD': os.environ['DBPASS'],
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'HOST': os.environ['DBURL'],
+        'PORT': os.environ['DBPORT'],
     }
 }
 

@@ -1,4 +1,7 @@
+from django.views.generic import UpdateView
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from .models import UserProfile
 
 
 def profile_view(request):
@@ -17,3 +20,19 @@ def profile_view(request):
         'albums_created': len(request.user.albums.all()),
     })
 
+
+class EditProfileView(UpdateView):
+    """View for editing profiles."""
+    template_name = "edit_profile.html"
+    model = UserProfile
+    fields = [
+        'camera_type',
+        'genre',
+        'is_professional',
+        'hireable',
+        'website',
+    ]
+    success_url = reverse_lazy('profile')
+
+    def get_object(self):
+        return self.request.user.profile

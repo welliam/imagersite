@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.urls import reverse
 from .models import UserProfile
 from imagersite.tests import AuthenticatedTestCase
 
@@ -60,3 +61,29 @@ class UserProfilePageTestCase(AuthenticatedTestCase):
     def test_profile_page_has_album_count(self):
         self.log_in()
         self.assertIn(b'Albums created:', self.client.get('/profile/').content)
+
+
+class EditProfileTestCase(TestCase):
+    """Edit profile test case."""
+
+    def setUp(self):
+        """GET the route named edit_profile."""
+        self.user = User(username='test')
+        self.user.save()
+        self.client.force_login(self.user)
+        self.response = self.client.get(reverse('edit_profile'))
+
+    def test_status_code(self):
+        """Test the status code for GETing edit_profile is 200."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_edit_profile(self):
+        """Test editing a album stores the updated value."""
+        new_camera_type = 'camera'
+        data = {
+            'camera_type': new_camera_type,
+        }
+        response = self.client.post(reverse('edit_profile'), data)
+        self.assertEqual(response.status_code, 302)
+        profile = UserProfile.objects.filter(user=self.user).first()
+        self.assertEqual(profile.camera_type, new_camera_type)

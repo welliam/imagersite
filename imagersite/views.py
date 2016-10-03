@@ -4,7 +4,7 @@ from django.conf import settings
 
 def home_view(request):
     """Return rendered home page."""
-    random_photo = Photo.objects.order_by("?").first()
+    random_photo = Photo.objects.filter(published='Public').order_by("?").first()
     if random_photo:
         random_photo = random_photo.photo.url
     else:

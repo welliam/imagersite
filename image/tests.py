@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
 from .models import Album, Photo
+from django.db import transaction
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -190,6 +191,11 @@ class PhotoViewTestCase(UserTestCase):
         response = self.client.get(reverse('images', args=[999999]))
         self.assertContains(response, 'Photo not found')
 
+    def test_photo_view_has_edit_link(self):
+        link = reverse('edit_photo', args=[self.photo.pk])
+        self.assertContains(self.response, 'href="{}"'.format(link))
+
+
 
 class AlbumViewTestCase(UserTestCase):
     """Test case for viewing an album."""
@@ -217,3 +223,226 @@ class AlbumViewTestCase(UserTestCase):
         """Test album contains associated images."""
         for image in self.album.photos.all():
             self.assertContains(self.response, image.photo.url)
+
+    def test_album_view_nonexistent_album(self):
+        response = self.client.get(reverse('album', args=[999999]))
+        self.assertContains(response, 'Album not found')
+
+    def test_album_view_has_edit_link(self):
+        link = reverse('edit_album', args=[self.album.pk])
+        self.assertContains(self.response, 'href="{}"'.format(link))
+
+
+class CreateAlbumTestCase(UserTestCase):
+    """Test case for creating albums."""
+
+    def setUp(self):
+        """Create a setup."""
+        super(CreateAlbumTestCase, self).setUp()
+        self.response = self.client.get(reverse('add_album'))
+
+    def test_get_create_url(self):
+        """Test getting create url."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_form_rendered(self):
+        """Test for is rendering on page."""
+        self.assertContains(self.response, "</form>")
+
+    def test_post_form(self):
+        """Test post redirects correctly."""
+        data = {
+            'title': 'YeahWhatever',
+            'description': 'Text',
+            'published': 'Public',
+        }
+        response = self.client.post(reverse('add_album'), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.albums.last().title, data['title'])
+
+    def test_album_create_page_301(self):
+        """Test create photo page returns 301 for unauthenticated user."""
+        self.client.logout()
+        response = self.client.get(reverse('add_photo'))
+        self.assertEqual(response.status_code, 302)
+
+
+class CreatePhotoTestCase(UserTestCase):
+    """Add Photo test case."""
+
+    def setUp(self):
+        """Create a setup."""
+        super(CreatePhotoTestCase, self).setUp()
+        self.response = self.client.get(reverse('add_photo'))
+
+    def test_status_code(self):
+        """Test status code of add photo view."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_form_rendered(self):
+        """Test form is rendered to html."""
+        self.assertContains(self.response, '</form>')
+
+    def test_post_photo_form(self):
+        """Test photo redirects and posts."""
+        ct = self.response.context['csrf_token']
+        data = {
+            'csrf_token': ct,
+            'title': 'TestPhoto',
+            'description': 'Test Description.',
+            'published': 'Public',
+            'photo': PhotoFactory(user=self.user).photo.read(),
+        }
+        response = self.client.post(reverse('add_photo'), data)
+        self.assertEqual(response.status_code, 302)
+        new_photo = Photo.objects.last()
+        self.assertEqual(new_photo.title, data['title'])
+        self.assertTrue(new_photo.user is not None)
+
+    def test_photo_create_page_301(self):
+        """Test create photo page returns 301 for unauthenticated user."""
+        self.client.logout()
+        response = self.client.get(reverse('add_photo'))
+        self.assertEqual(response.status_code, 302)
+
+
+class EditPhotoTestCase(UserTestCase):
+    """Edit photo test case."""
+
+    def setUp(self):
+        """Set up a photo to be edited."""
+        super(EditPhotoTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('edit_photo', args=[self.photo.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of edit photo view."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_edit_photo(self):
+        """Test editing a photo stores the updated value."""
+        new_title = self.photo.title + '!'
+        data = {
+            'title': new_title,
+            'published': 'Public'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.photos.last().title, new_title)
+
+
+class EditAlbumTestCase(UserTestCase):
+    """Edit album test case."""
+
+    def setUp(self):
+        """Set up an album to be edited."""
+        super(EditAlbumTestCase, self).setUp()
+        self.album = self.user.albums.last()
+        self.url = reverse('edit_album', args=[self.album.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_edit_album(self):
+        """Test editing an album stores the updated value."""
+        new_title = self.album.title + '?!'
+        data = {
+            'title': new_title,
+            'published': 'Shared',
+            'photos': [p.pk for p in self.album.photos.all()]
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.albums.last().title, new_title)
+
+    def test_add_photo_from_other_user(self):
+        """Test that users cannot add a photo from another user."""
+        other_user = User(username='whoever')
+        other_user.save()
+        p = PhotoFactory(user=other_user)
+        p.save()
+        data = dict(photos=[p.pk], title='album', published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_set_cover_not_in_photos(self):
+        """Test that users cannot set a cover not in the album's photos."""
+        p1 = self.user.photos.first()
+        p2 = self.user.photos.last()
+        self.assertNotEqual(p1, p2)  # test is useless otherwise
+        data = dict(cover=p1.pk, title='album', photos=[p2.pk], published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_set_cover_from_other_user(self):
+        """Test that users cannot set a cover from another user."""
+        other_user = User(username='whoever')
+        other_user.save()
+        p = PhotoFactory(user=other_user)
+        p.save()
+        data = dict(cover=p.pk, title='album', published='Public')
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 200)
+
+
+class DeleteAlbumTestCase(UserTestCase):
+    """Delete album test case."""
+
+    def setUp(self):
+        """Set up an album to be deleted."""
+        super(DeleteAlbumTestCase, self).setUp()
+        self.album = self.user.albums.last()
+        self.url = reverse('delete_album', args=[self.album.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_post(self):
+        """Test posting to delete view deletes corresponding album."""
+        self.assertIn(self.album, self.user.albums.all())
+        self.client.post(self.url)
+        self.assertNotIn(self.album, self.user.albums.all())
+
+    def test_delete_other_users_album(self):
+        """Test user cannot delete another user's album."""
+        other_user = User(username='whoever')
+        other_user.save()
+        album = self.user.albums.last()
+        self.client.force_login(other_user)
+        response = self.client.post(self.url)
+        self.assertNotEqual(response.status_code, 302)
+        self.assertIn(album, Album.objects.all())
+
+
+class DeletePhotoTestCase(UserTestCase):
+    def setUp(self):
+        """Set up a photo to be deleted."""
+        super(DeletePhotoTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('delete_photo', args=[self.photo.pk])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_post(self):
+        """Test posting to delete view deletes corresponding photo."""
+        self.assertIn(self.photo, self.user.photos.all())
+        self.client.post(self.url)
+        self.assertNotIn(self.photo, self.user.photos.all())
+
+    def test_delete_other_users_photo(self):
+        """Test user cannot delete another user's photo."""
+        other_user = User(username='whoever')
+        other_user.save()
+        photo = self.user.photos.last()
+        self.client.force_login(other_user)
+        response = self.client.post(self.url)
+        self.assertNotEqual(response.status_code, 302)
+        self.assertIn(photo, Photo.objects.all())

@@ -38,8 +38,16 @@ input[type="text"], input[type="password"], input[type="email"] {
     color: grey;
 }
 
-div.libraryphoto {
+div.libraryobject {
     display: inline-block;
+    margin: 1em;
+    border-style: solid;
+    border-width: thin;
+    padding: 0.25em;
+}
+
+img {
+    max-width: 100%;
 }
 
 img.photofullsize {
