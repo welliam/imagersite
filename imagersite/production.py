@@ -1,11 +1,12 @@
 import os
-from imagersite.settings import BASE_DIR
+from imagersite.settings import *
 
 
 DEBUG = False
 TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = ['ec2-54-191-95-187.us-west-2.compute.amazonaws.com']
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY)
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
