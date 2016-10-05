@@ -38,8 +38,8 @@ class PhotoApiTestCase(TestCase):
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(data[0]['title'], self.photo.title)
 
-    def test_unauthenticated_user_status_code(self):
+    def test_unauthenticated_user_redirects(self):
         """Test status code of an unauth user."""
         self.client.logout()
         response = self.client.get(reverse('photo_api') + '.json')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302)
