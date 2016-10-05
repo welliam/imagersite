@@ -6,11 +6,3 @@ class PhotoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Photo
-        fields = (
-            'title', 
-            'description', 
-            'date_uploaded',
-            'date_modified',
-            'date_published',
-            'published',
-        )
