@@ -28,6 +28,6 @@ class PhotoApiTestCase(TestCase):
 
     def test_stats_code(self):
         """Test status is 200."""
-        response = self.client.get(reverse('photo_api'))
+        response = self.client.get(reverse('photo_api') + '.json')
         self.assertEqual(response.status_code, 200)
     
