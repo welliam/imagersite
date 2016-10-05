@@ -1,6 +1,8 @@
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
+from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
+from image.models import Photo
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -24,3 +26,8 @@ class PhotoApiTestCase(TestCase):
         )
         self.photo.save()
 
+    def test_stats_code(self):
+        """Test status is 200."""
+        response = self.client.get(reverse('photo_api'))
+        self.assertEqual(response.status_code, 200)
+    
