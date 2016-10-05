@@ -10,6 +10,6 @@ from django.contrib.auth.decorators import login_required
 @api_view(['GET'])
 def photo_api_view(request, format=None):
     """Get photo api"""
-    photos = Photo.objects.all()
+    photos = Photo.objects.filter(user=request.user)
     serializer = PhotoSerializer(photos, many=True)
     return Response(serializer.data)
