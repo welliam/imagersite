@@ -1,0 +1,26 @@
+<!doctype HTML>
+
+{% load static from staticfiles %}
+
+<html>
+  <head>
+    <title>Imager - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+  </head>
+
+  <body>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}">Profile</a>
+      <a href="{% url 'library' %}">Library</a>
+      {% endif %}
+    </nav>
+
+
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
+
+  </body>
+</html>

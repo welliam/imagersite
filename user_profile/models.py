@@ -30,15 +30,17 @@ class UserProfile(models.Model):
     objects = models.Manager()
     active = ProfileManager()
 
-
-    camera_type = models.CharField(max_length=128)
-    genre = models.CharField(max_length=128)
+    camera_type = models.CharField(max_length=128, blank=True)
+    genre = models.CharField(max_length=128, blank=True)
     is_professional = models.BooleanField(default=False)
     hireable = models.BooleanField(default=False)
-    website = models.CharField(max_length=128)
+    website = models.CharField(max_length=128, blank=True)
 
     def __repr__(self):
         return 'UserProfile(first_name={})'.format(self.user.first_name)
+
+    def __str__(self):
+        return '{}'.format(self.user.username)
 
 
 @receiver(models.signals.post_save, sender=User)

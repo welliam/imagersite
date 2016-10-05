@@ -1,0 +1,1 @@
+go here to activate: {{ site }}/accounts/activate/{{ activation_key }}/

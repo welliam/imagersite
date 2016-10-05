@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+
+<h1>Hi {{ username }}</h1>
+
+{% if request.user.is_authenticated %}
+
+{% if first_name %}
+  <div>Full name: {{ first_name }} {{ last_name }}</div>
+{% endif %}
+
+{% if email %}
+  <div>Email: {{ email }}</div>
+{% endif %}
+
+{% if website %}
+  <div>Website: {{ website }}</div>
+{% endif %}
+
+{% if camera_type %}
+<div>Camera type: {{ camera_type }}</div>
+{% endif %}
+
+{% if genre %}
+<div>Genre: {{ genre }}</div>
+{% endif %}
+
+<div>
+  Level:
+  {% if is_professional %}
+  Professional
+  {% else %}
+  Hobbyist
+  {% endif %}
+</div>
+
+{% if hireable %}
+<div>Looking for work</div>
+{% endif %}
+
+<div>Photos uploaded: {{ photos_uploaded }}</div>
+<div>Albums created: {{ albums_created }}</div>
+
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,55 @@
+body {
+    font-family: sans;
+    max-width: 50em;
+    margin: auto;
+}
+
+
+div#content {
+    text-align: center;
+    margin-top: 3em;
+}
+
+a {
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+input[type="submit"] {
+    background: transparent;
+    border-radius: 1em;
+    padding: 0.5em 0.7em;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 2px solid black;
+    width: 20em;
+    margin: 1em auto;
+}
+
+.helptext {
+    display: block;
+    color: grey;
+}
+
+div.libraryobject {
+    display: inline-block;
+    margin: 1em;
+    border-style: solid;
+    border-width: thin;
+    padding: 0.25em;
+}
+
+img {
+    max-width: 100%;
+}
+
+img.photofullsize {
+    margin: 3em;
+}
