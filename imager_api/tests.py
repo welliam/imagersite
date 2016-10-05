@@ -43,3 +43,12 @@ class PhotoApiTestCase(TestCase):
         self.client.logout()
         response = self.client.get(reverse('photo_api') + '.json')
         self.assertEqual(response.status_code, 302)
+
+    def test_user_photos_only(self):
+        """Test response had a photo and title."""
+        user = User(username='Jeff')
+        user.save()
+        self.client.force_login(user)
+        response = self.client.get(reverse('photo_api') + '.json')
+        data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(len(data), 0)
