@@ -167,6 +167,10 @@ class LibraryTestCase(UserTestCase):
             url = reverse('album', args=[album.pk])
             self.assertContains(self.response, url)
 
+    def test_library_view_has_page_1(self):
+        """Test library page has page 1 for pagination."""
+        self.assertContains(self.response, "Page 1")
+
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
@@ -194,7 +198,6 @@ class PhotoViewTestCase(UserTestCase):
     def test_photo_view_has_edit_link(self):
         link = reverse('edit_photo', args=[self.photo.pk])
         self.assertContains(self.response, 'href="{}"'.format(link))
-
 
 
 class AlbumViewTestCase(UserTestCase):
@@ -231,6 +234,10 @@ class AlbumViewTestCase(UserTestCase):
     def test_album_view_has_edit_link(self):
         link = reverse('edit_album', args=[self.album.pk])
         self.assertContains(self.response, 'href="{}"'.format(link))
+
+    def test_album_view_has_page_1(self):
+        """Test album view has page 1 for pagination"""
+        self.assertContains(self.response, 'Page 1')
 
 
 class CreateAlbumTestCase(UserTestCase):
