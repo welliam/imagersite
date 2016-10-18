@@ -13,7 +13,6 @@
 <div>
   {% if albums %}
     {% for album in albums %}
-
       <div class="libraryobject">
         <a href="{% url 'album' album.pk %}">
           <div>
@@ -35,12 +34,11 @@
           </div>
         </a>
       </div>
-
     {% endfor %}
+</div>
   {% else %}
     No albums!
   {% endif %}
-</div>
 
 
 <h1>Photos</h1>
@@ -73,6 +71,21 @@
   {% else %}
     No photos!
   {% endif %}
+    <div class="pagination">
+      <span class="step-links">
+          {% if photos.has_previous %}
+              <a href="?page={{ photos.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ photos.number }} of {{ photos.paginator.num_pages }}
+          </span>
+
+          {% if albums.has_next %}
+              <a href="?page={{ photos.next_page_number }}">next</a>
+          {% endif %}
+      </span>
+  </div>
 </div>
 
 
