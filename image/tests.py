@@ -155,11 +155,17 @@ class LibraryTestCase(UserTestCase):
         """Test library page shows images."""
         self.assertContains(self.response, 'src="/media/cache')
 
-    def test_library_links_to_image(self):
-        """Test library page has links to images."""
-        for photo in self.user.photos.all():
+    def test_library_links_to_first_images(self):
+        """Test library page has links to first 4 images."""
+        for photo in self.user.photos.all()[:4]:
             url = reverse('images', args=[photo.pk])
             self.assertContains(self.response, url)
+
+    def test_library_no_links_to_last_images(self):
+        """Test library page has no links to any images beyond the first 4."""
+        for photo in self.user.photos.all()[4:]:
+            url = reverse('images', args=[photo.pk])
+            self.assertNotContains(self.response, url)
 
     def test_library_links_to_album(self):
         """Test library page has links to images."""
