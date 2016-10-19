@@ -124,11 +124,13 @@ class UserTestCase(TestCase):
         self.user.save()
         self.client.force_login(self.user)
         for i in range(10):
-            PhotoFactory(
+            photo = PhotoFactory(
                 user=self.user,
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
-            ).save()
+            )
+            photo.save()
+            photo.tags.add('dslkjfafkjasdf')
         album = Album(
             user=self.user,
             title='Blue Pictures',
@@ -202,6 +204,10 @@ class PhotoViewTestCase(UserTestCase):
     def test_photo_view_has_edit_link(self):
         link = reverse('edit_photo', args=[self.photo.pk])
         self.assertContains(self.response, 'href="{}"'.format(link))
+
+    def test_photo_view_has_tags(self):
+        for tag in map(lambda t: t.name, self.photo.tags.all()):
+            self.assertContains(self.response, tag)
 
 
 class AlbumViewTestCase(UserTestCase):
@@ -392,7 +398,12 @@ class EditAlbumTestCase(UserTestCase):
         p1 = self.user.photos.first()
         p2 = self.user.photos.last()
         self.assertNotEqual(p1, p2)  # test is useless otherwise
-        data = dict(cover=p1.pk, title='album', photos=[p2.pk], published='Public')
+        data = dict(
+            cover=p1.pk,
+            title='album',
+            photos=[p2.pk],
+            published='Public'
+        )
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
 

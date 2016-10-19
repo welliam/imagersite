@@ -25,4 +25,10 @@
 <div>Upload date: {{ photo.date_uploaded }}</div>
 <div>Last modified: {{ photo.date_modified }}</div>
 
+<div>Tags:
+  {% for tag in photo.tags.all %}
+    "{{ tag.name }}"
+  {% endfor %}
+</div>
+
 {% endblock %}
