@@ -3,7 +3,9 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
+
 from .models import Album, Photo
 
 
@@ -11,6 +13,19 @@ def library_view(request):
     """Render a library."""
     photos = request.user.photos.all()
     albums = request.user.albums.all()
+    pag_photos = Paginator(photos, 4)
+    pag_albums = Paginator(albums, 4)
+    page = request.GET.get('page')
+
+    try:
+        photos = pag_photos.page(page)
+        albums = pag_albums.page(page)
+    except PageNotAnInteger:
+        albums = pag_albums.page(1)
+        photos = pag_photos.page(1)
+    except EmptyPage:
+        albums = pag_albums.page(pag_albums.num_pages)
+        photos = pag_photos.page(pag_photos.num_pages)
     for album in albums:
         if not album.cover:
             album.nocover = True
@@ -32,6 +47,14 @@ def album_view(request, album_id):
     album = request.user.albums.filter(id=album_id).first()
     if album:
         photos = album.photos.all()
+        pag_photos = Paginator(photos, 4)
+        page = request.GET.get('page')
+        try:
+            photos = pag_photos.page(page)
+        except PageNotAnInteger:
+            photos = pag_photos.page(1)
+        except EmptyPage:
+            photos = pag_photos.page(pag_photos.num_pages)
         return render(request, 'album.html', dict(album=album, photos=photos))
     else:
         return render(request, 'album_not_found.html')
