@@ -14,7 +14,9 @@
 
   <div>
     {% for photo in photos %}
-      <img src="{{ photo.photo.url }}">
+      <a href="{% url 'images' photo.pk %}">
+        <img src="{{ photo.photo.url }}">
+      </a>
     {% endfor %}
     <div class="pagination">
       <span class="step-links">
