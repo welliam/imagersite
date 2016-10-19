@@ -42,7 +42,7 @@ class Photo(models.Model):
         choices=PUB_CHOICES,
         default='Public'
     )
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.title

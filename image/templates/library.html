@@ -6,6 +6,11 @@
 
 {% block content %}
 
+<h1>Tags</h1>
+{% for tag in tags %}
+  <div>{{ tag.name }}</div>
+{% endfor %}
+
 <h1>Albums</h1>
 
 <div><a href="{% url 'add_album' %}">Add album</a></div>

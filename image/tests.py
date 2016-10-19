@@ -130,7 +130,7 @@ class UserTestCase(TestCase):
                 description='Descrpition for image{}'.format(i),
             )
             photo.save()
-            photo.tags.add('dslkjfafkjasdf')
+            photo.tags.add('dslkjfafkjasdf{}'.format(i))
         album = Album(
             user=self.user,
             title='Blue Pictures',
@@ -176,6 +176,12 @@ class LibraryTestCase(UserTestCase):
     def test_library_view_has_page_1(self):
         """Test library page has page 1 for pagination."""
         self.assertContains(self.response, "Page 1")
+
+    def test_library_view_has_tags(self):
+        """Test library page has all the user's tags."""
+        for photo in self.user.photos.all():
+            for tag in photo.tags.all():
+                self.assertContains(self.response, tag)
 
 
 class PhotoViewTestCase(UserTestCase):
