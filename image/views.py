@@ -62,6 +62,11 @@ def album_view(request, album_id):
         return render(request, 'album_not_found.html')
 
 
+def tag_view(request, tag):
+    """All photos with tag."""
+    return render(request, 'tag.html')
+
+
 class UserCreateView(LoginRequiredMixin, CreateView):
     """View which attaches the request's user to the form being submitted."""
 

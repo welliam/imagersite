@@ -482,3 +482,16 @@ class DeletePhotoTestCase(UserTestCase):
         response = self.client.post(self.url)
         self.assertNotEqual(response.status_code, 302)
         self.assertIn(photo, Photo.objects.all())
+
+class TagViewTestCase(UserTestCase):
+    """Test viewing photos which contain a tag."""
+
+    def setUp(self):
+        super(TagViewTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('tag', args=[self.photo.tags.first()])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
