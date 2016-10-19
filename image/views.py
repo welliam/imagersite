@@ -64,7 +64,9 @@ def album_view(request, album_id):
 
 def tag_view(request, tag):
     """All photos with tag."""
-    return render(request, 'tag.html')
+    # tag, photos
+    context = dict(tag=tag, photos=request.user.photos.filter(tags__name=tag))
+    return render(request, 'tag.html', context)
 
 
 class UserCreateView(LoginRequiredMixin, CreateView):

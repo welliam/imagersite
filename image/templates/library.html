@@ -8,7 +8,7 @@
 
 <h1>Tags</h1>
 {% for tag in tags %}
-  <div>{{ tag.name }}</div>
+  <a href="{% url 'tag' tag.name %}">"{{ tag.name }}"</a>
 {% endfor %}
 
 <h1>Albums</h1>

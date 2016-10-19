@@ -119,7 +119,7 @@ class UserTestCase(TestCase):
     """Testcase with a user."""
 
     def setUp(self, test_url=None):
-        """Setup Library testcase."""
+        """Setup User testcase."""
         self.user = User(username='acutebird')
         self.user.save()
         self.client.force_login(self.user)
@@ -495,3 +495,8 @@ class TagViewTestCase(UserTestCase):
     def test_status_code(self):
         """Test status code of response."""
         self.assertEqual(self.response.status_code, 200)
+
+    def test_response_contains_photo(self):
+        """Test response contains the tagged photo."""
+        url = reverse('images', args=[self.photo.pk])
+        self.assertContains(self.response, url)

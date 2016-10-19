@@ -27,7 +27,7 @@
 
 <div>Tags:
   {% for tag in photo.tags.all %}
-    "{{ tag.name }}"
+    <a href="{% url 'tag' tag.name %}">"{{ tag.name }}"</a>
   {% endfor %}
 </div>
 
