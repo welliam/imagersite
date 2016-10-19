@@ -483,6 +483,7 @@ class DeletePhotoTestCase(UserTestCase):
         self.assertNotEqual(response.status_code, 302)
         self.assertIn(photo, Photo.objects.all())
 
+
 class TagViewTestCase(UserTestCase):
     """Test viewing photos which contain a tag."""
 
