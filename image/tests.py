@@ -255,6 +255,12 @@ class AlbumViewTestCase(UserTestCase):
         """Test album view has page 1 for pagination"""
         self.assertContains(self.response, 'Page 1')
 
+    def test_album_view_has_tags(self):
+        """Test album view has tags of all contained photos."""
+        for photo in self.album.photos.all():
+            for tag in photo.tags.all():
+                self.assertContains(self.response, tag.name)
+
 
 class CreateAlbumTestCase(UserTestCase):
     """Test case for creating albums."""

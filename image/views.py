@@ -49,6 +49,10 @@ def album_view(request, album_id):
     album = request.user.albums.filter(id=album_id).first()
     if album:
         photos = album.photos.all()
+        tags = set()
+        for photo in photos:
+            for tag in photo.tags.all():
+                tags.add(tag)
         pag_photos = Paginator(photos, 4)
         page = request.GET.get('page')
         try:
@@ -57,7 +61,8 @@ def album_view(request, album_id):
             photos = pag_photos.page(1)
         except EmptyPage:
             photos = pag_photos.page(pag_photos.num_pages)
-        return render(request, 'album.html', dict(album=album, photos=photos))
+        context = dict(album=album, photos=photos, tags=tags)
+        return render(request, 'album.html', context)
     else:
         return render(request, 'album_not_found.html')
 

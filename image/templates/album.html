@@ -8,6 +8,11 @@
   <h1>{{ album.title }}</h1>
 
   <div>{{ album.description }}</div>
+  <div>Tags:
+    {% for tag in tags %}
+      <a href="{% url 'tag' tag.name %}">"{{ tag.name }}"</a>
+    {% endfor %}
+  </div>
 
   <a href="{% url 'edit_album' album.pk %}" >Edit</a>
   <a href="{% url 'delete_album' album.pk %}" >Delete</a>
