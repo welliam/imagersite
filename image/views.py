@@ -150,7 +150,8 @@ class AddPhotoView(UserCreateView):
         'title',
         'description',
         'published',
-        'photo'
+        'photo',
+        'tags'
     ]
 
 

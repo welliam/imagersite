@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
+from taggit.managers import TaggableManager
 
 
 PUB_CHOICES = (
@@ -41,6 +42,7 @@ class Photo(models.Model):
         choices=PUB_CHOICES,
         default='Public'
     )
+    tags = TaggableManager()
 
     def __str__(self):
         return self.title

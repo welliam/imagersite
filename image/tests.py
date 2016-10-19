@@ -1,11 +1,9 @@
 from datetime import datetime
-from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
 from .models import Album, Photo
-from django.db import transaction
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -299,18 +297,22 @@ class CreatePhotoTestCase(UserTestCase):
     def test_post_photo_form(self):
         """Test photo redirects and posts."""
         ct = self.response.context['csrf_token']
+        tags = 'hello world test'
         data = {
             'csrf_token': ct,
             'title': 'TestPhoto',
             'description': 'Test Description.',
             'published': 'Public',
             'photo': PhotoFactory(user=self.user).photo.read(),
+            'tags': tags
         }
         response = self.client.post(reverse('add_photo'), data)
         self.assertEqual(response.status_code, 302)
         new_photo = Photo.objects.last()
         self.assertEqual(new_photo.title, data['title'])
         self.assertTrue(new_photo.user is not None)
+        for tag in tags.split():
+            self.assertIn(tag, map(lambda t: t.name, new_photo.tags.all()))
 
     def test_photo_create_page_301(self):
         """Test create photo page returns 301 for unauthenticated user."""
