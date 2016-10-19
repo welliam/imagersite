@@ -338,13 +338,17 @@ class EditPhotoTestCase(UserTestCase):
     def test_edit_photo(self):
         """Test editing a photo stores the updated value."""
         new_title = self.photo.title + '!'
+        tag = 'test'
         data = {
             'title': new_title,
-            'published': 'Public'
+            'published': 'Public',
+            'tags': tag,
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user.photos.last().title, new_title)
+        new_photo = self.user.photos.last()
+        self.assertEqual(new_photo.title, new_title)
+        self.assertEqual(tag, new_photo.tags.first().name)
 
 
 class EditAlbumTestCase(UserTestCase):

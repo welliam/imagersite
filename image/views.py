@@ -162,7 +162,8 @@ class EditPhotoView(UpdateView):
     fields = [
         'title',
         'description',
-        'published'
+        'published',
+        'tags'
     ]
     success_url = reverse_lazy('library')
 
