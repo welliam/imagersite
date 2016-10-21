@@ -177,6 +177,19 @@ class LibraryTestCase(UserTestCase):
         """Test library page has page 1 for pagination."""
         self.assertContains(self.response, "Page 1")
 
+    def test_library_view_many_albums(self):
+        """Test library view when there are > 1 page of albums."""
+        new_user = User(username='album_fiend')
+        new_user.save()
+        self.client.force_login(new_user)
+        for i in reversed(range(30)):
+            Album(user=new_user, title='a{}'.format(i)).save()
+        response = self.client.get(reverse('library'))
+        for i in range(0, 4):
+            self.assertContains(response, 'a{}'.format(i))
+        for i in range(4, 30):
+            self.assertNotContains(response, 'a{}'.format(i))
+
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""
