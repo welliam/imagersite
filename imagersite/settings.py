@@ -23,9 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['FL_SECURITY_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('DEBUG', False) == 'True'
+ALLOWED_HOSTS = ['54.218.76.109', 'us-west-2.compute.amazonaws.com']
 
 
 # Application definition
@@ -127,22 +126,24 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Ansible stuff
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'imagersite', 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
-]
-
+# Media Root and media url
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-THUMBNAIL_DEBUG = DEBUG
-ACCOUNT_ACTIVATION_DAYS = 30
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+# Email credentials
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ['EMAIL_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_PW']
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_DEFAULT']
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
