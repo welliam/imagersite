@@ -190,6 +190,14 @@ class LibraryTestCase(UserTestCase):
         for i in range(4, 30):
             self.assertNotContains(response, 'a{}'.format(i))
 
+    def test_library_view_page_number(self):
+        """Test show page number when one page 2 of albums."""
+        self.client.force_login(self.other_user)
+        response = self.client.get(reverse('library') + '?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'Page 1 of 1')
+        self.assertContains(response, 'Page 2 of 1')
+
 
 class PhotoViewTestCase(UserTestCase):
     """Test case for viewing a single image."""

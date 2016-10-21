@@ -15,7 +15,7 @@ def library_view(request):
     albums = request.user.albums.all()
     pag_photos = Paginator(photos, 4)
     pag_albums = Paginator(albums, 4)
-    page = request.GET.get('page')
+    page = request.GET.get('page', 1)
 
     try:
         photos = pag_photos.page(page)
@@ -29,7 +29,7 @@ def library_view(request):
     for album in albums:
         if not album.cover:
             album.nocover = True
-    context = dict(photos=photos, albums=albums)
+    context = dict(photos=photos, albums=albums, page=page)
     return render(request, 'library.html', context)
 
 
