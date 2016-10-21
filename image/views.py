@@ -16,7 +16,6 @@ def library_view(request):
     pag_photos = Paginator(photos, 4)
     pag_albums = Paginator(albums, 4)
     page = request.GET.get('page')
-
     try:
         photos = pag_photos.page(page)
         albums = pag_albums.page(page)
@@ -29,7 +28,10 @@ def library_view(request):
     for album in albums:
         if not album.cover:
             album.nocover = True
-    context = dict(photos=photos, albums=albums)
+    tags = []
+    for photo in request.user.photos.all():
+        tags.extend(photo.tags.all())
+    context = dict(photos=photos, albums=albums, tags=tags)
     return render(request, 'library.html', context)
 
 
@@ -47,6 +49,10 @@ def album_view(request, album_id):
     album = request.user.albums.filter(id=album_id).first()
     if album:
         photos = album.photos.all()
+        tags = set()
+        for photo in photos:
+            for tag in photo.tags.all():
+                tags.add(tag)
         pag_photos = Paginator(photos, 4)
         page = request.GET.get('page')
         try:
@@ -55,9 +61,17 @@ def album_view(request, album_id):
             photos = pag_photos.page(1)
         except EmptyPage:
             photos = pag_photos.page(pag_photos.num_pages)
-        return render(request, 'album.html', dict(album=album, photos=photos))
+        context = dict(album=album, photos=photos, tags=tags)
+        return render(request, 'album.html', context)
     else:
         return render(request, 'album_not_found.html')
+
+
+def tag_view(request, tag):
+    """All photos with tag."""
+    # tag, photos
+    context = dict(tag=tag, photos=request.user.photos.filter(tags__name=tag))
+    return render(request, 'tag.html', context)
 
 
 class UserCreateView(LoginRequiredMixin, CreateView):
@@ -150,7 +164,8 @@ class AddPhotoView(UserCreateView):
         'title',
         'description',
         'published',
-        'photo'
+        'photo',
+        'tags'
     ]
 
 
@@ -161,7 +176,8 @@ class EditPhotoView(UpdateView):
     fields = [
         'title',
         'description',
-        'published'
+        'published',
+        'tags'
     ]
     success_url = reverse_lazy('library')
 

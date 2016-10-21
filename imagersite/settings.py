@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'user_profile',
     'image',
-    'rest_framework'
+    'rest_framework',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_REDIRECT_URL = '/'
+
+TAGGIT_CASE_INSENSITIVE = True

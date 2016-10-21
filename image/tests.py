@@ -1,11 +1,9 @@
 from datetime import datetime
-from django.conf import settings
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from factory.django import DjangoModelFactory, ImageField
 from .models import Album, Photo
-from django.db import transaction
 
 
 class PhotoFactory(DjangoModelFactory):
@@ -121,16 +119,18 @@ class UserTestCase(TestCase):
     """Testcase with a user."""
 
     def setUp(self, test_url=None):
-        """Setup Library testcase."""
+        """Setup User testcase."""
         self.user = User(username='acutebird')
         self.user.save()
         self.client.force_login(self.user)
         for i in range(10):
-            PhotoFactory(
+            photo = PhotoFactory(
                 user=self.user,
                 title='image{}'.format(i),
                 description='Descrpition for image{}'.format(i),
-            ).save()
+            )
+            photo.save()
+            photo.tags.add('dslkjfafkjasdf{}'.format(i))
         album = Album(
             user=self.user,
             title='Blue Pictures',
@@ -155,11 +155,17 @@ class LibraryTestCase(UserTestCase):
         """Test library page shows images."""
         self.assertContains(self.response, 'src="/media/cache')
 
-    def test_library_links_to_image(self):
-        """Test library page has links to images."""
-        for photo in self.user.photos.all():
+    def test_library_links_to_first_images(self):
+        """Test library page has links to first 4 images."""
+        for photo in self.user.photos.all()[:4]:
             url = reverse('images', args=[photo.pk])
             self.assertContains(self.response, url)
+
+    def test_library_no_links_to_last_images(self):
+        """Test library page has no links to any images beyond the first 4."""
+        for photo in self.user.photos.all()[4:]:
+            url = reverse('images', args=[photo.pk])
+            self.assertNotContains(self.response, url)
 
     def test_library_links_to_album(self):
         """Test library page has links to images."""
@@ -170,6 +176,12 @@ class LibraryTestCase(UserTestCase):
     def test_library_view_has_page_1(self):
         """Test library page has page 1 for pagination."""
         self.assertContains(self.response, "Page 1")
+
+    def test_library_view_has_tags(self):
+        """Test library page has all the user's tags."""
+        for photo in self.user.photos.all():
+            for tag in photo.tags.all():
+                self.assertContains(self.response, tag)
 
 
 class PhotoViewTestCase(UserTestCase):
@@ -198,6 +210,10 @@ class PhotoViewTestCase(UserTestCase):
     def test_photo_view_has_edit_link(self):
         link = reverse('edit_photo', args=[self.photo.pk])
         self.assertContains(self.response, 'href="{}"'.format(link))
+
+    def test_photo_view_has_tags(self):
+        for tag in map(lambda t: t.name, self.photo.tags.all()):
+            self.assertContains(self.response, tag)
 
 
 class AlbumViewTestCase(UserTestCase):
@@ -238,6 +254,12 @@ class AlbumViewTestCase(UserTestCase):
     def test_album_view_has_page_1(self):
         """Test album view has page 1 for pagination"""
         self.assertContains(self.response, 'Page 1')
+
+    def test_album_view_has_tags(self):
+        """Test album view has tags of all contained photos."""
+        for photo in self.album.photos.all():
+            for tag in photo.tags.all():
+                self.assertContains(self.response, tag.name)
 
 
 class CreateAlbumTestCase(UserTestCase):
@@ -293,18 +315,22 @@ class CreatePhotoTestCase(UserTestCase):
     def test_post_photo_form(self):
         """Test photo redirects and posts."""
         ct = self.response.context['csrf_token']
+        tags = 'hello world test'
         data = {
             'csrf_token': ct,
             'title': 'TestPhoto',
             'description': 'Test Description.',
             'published': 'Public',
             'photo': PhotoFactory(user=self.user).photo.read(),
+            'tags': tags
         }
         response = self.client.post(reverse('add_photo'), data)
         self.assertEqual(response.status_code, 302)
         new_photo = Photo.objects.last()
         self.assertEqual(new_photo.title, data['title'])
         self.assertTrue(new_photo.user is not None)
+        for tag in tags.split():
+            self.assertIn(tag, map(lambda t: t.name, new_photo.tags.all()))
 
     def test_photo_create_page_301(self):
         """Test create photo page returns 301 for unauthenticated user."""
@@ -330,13 +356,17 @@ class EditPhotoTestCase(UserTestCase):
     def test_edit_photo(self):
         """Test editing a photo stores the updated value."""
         new_title = self.photo.title + '!'
+        tag = 'test'
         data = {
             'title': new_title,
-            'published': 'Public'
+            'published': 'Public',
+            'tags': tag,
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.user.photos.last().title, new_title)
+        new_photo = self.user.photos.last()
+        self.assertEqual(new_photo.title, new_title)
+        self.assertEqual(tag, new_photo.tags.first().name)
 
 
 class EditAlbumTestCase(UserTestCase):
@@ -380,7 +410,12 @@ class EditAlbumTestCase(UserTestCase):
         p1 = self.user.photos.first()
         p2 = self.user.photos.last()
         self.assertNotEqual(p1, p2)  # test is useless otherwise
-        data = dict(cover=p1.pk, title='album', photos=[p2.pk], published='Public')
+        data = dict(
+            cover=p1.pk,
+            title='album',
+            photos=[p2.pk],
+            published='Public'
+        )
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 200)
 
@@ -453,3 +488,22 @@ class DeletePhotoTestCase(UserTestCase):
         response = self.client.post(self.url)
         self.assertNotEqual(response.status_code, 302)
         self.assertIn(photo, Photo.objects.all())
+
+
+class TagViewTestCase(UserTestCase):
+    """Test viewing photos which contain a tag."""
+
+    def setUp(self):
+        super(TagViewTestCase, self).setUp()
+        self.photo = self.user.photos.last()
+        self.url = reverse('tag', args=[self.photo.tags.first()])
+        self.response = self.client.get(self.url)
+
+    def test_status_code(self):
+        """Test status code of response."""
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_response_contains_photo(self):
+        """Test response contains the tagged photo."""
+        url = reverse('images', args=[self.photo.pk])
+        self.assertContains(self.response, url)

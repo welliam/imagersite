@@ -10,6 +10,8 @@ from .views import (
     AddAlbumView,
     EditAlbumView,
     DeleteAlbumView,
+
+    tag_view,
 )
 from django.conf.urls import url
 
@@ -41,4 +43,9 @@ urlpatterns = [
         DeleteAlbumView.as_view(),
         name='delete_album'
     ),
+    url(
+        r'tag/(?P<tag>.+)/$',
+        tag_view,
+        name='tag'
+    )
 ]

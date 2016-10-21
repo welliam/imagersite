@@ -25,4 +25,10 @@
 <div>Upload date: {{ photo.date_uploaded }}</div>
 <div>Last modified: {{ photo.date_modified }}</div>
 
+<div>Tags:
+  {% for tag in photo.tags.all %}
+    <a href="{% url 'tag' tag.name %}">"{{ tag.name }}"</a>
+  {% endfor %}
+</div>
+
 {% endblock %}
