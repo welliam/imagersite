@@ -128,7 +128,7 @@ USE_TZ = True
 
 # Ansible stuff
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'imagersite', 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Media Root and media url
