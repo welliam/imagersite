@@ -8,28 +8,30 @@ from django.http import Http404
 
 from .models import Album, Photo
 
+def get_paginated(paginator, page):
+    try:
+        return paginator.page(page), page
+    except PageNotAnInteger:
+        return paginator.page(1), 1
+    except EmptyPage:
+        return paginator.page(1), 1
+
 
 def library_view(request):
     """Render a library."""
     photos = request.user.photos.all()
     albums = request.user.albums.all()
-    pag_photos = Paginator(photos, 4)
-    pag_albums = Paginator(albums, 4)
-    page = request.GET.get('page')
-
-    try:
-        photos = pag_photos.page(page)
-        albums = pag_albums.page(page)
-    except PageNotAnInteger:
-        albums = pag_albums.page(1)
-        photos = pag_photos.page(1)
-    except EmptyPage:
-        albums = pag_albums.page(pag_albums.num_pages)
-        photos = pag_photos.page(pag_photos.num_pages)
+    photos, pp = get_paginated(Paginator(photos, 4),
+        request.GET.get('pp', 1)
+    )
+    albums, ap = get_paginated(
+        Paginator(albums, 4),
+        request.GET.get('ap', 1)
+    )
     for album in albums:
         if not album.cover:
             album.nocover = True
-    context = dict(photos=photos, albums=albums)
+    context = dict(photos=photos, albums=albums, pp=pp, ap=ap)
     return render(request, 'library.html', context)
 
 
