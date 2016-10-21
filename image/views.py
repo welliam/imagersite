@@ -14,15 +14,14 @@ def get_paginated(paginator, page):
     except PageNotAnInteger:
         return paginator.page(1), 1
     except EmptyPage:
-        return [], page
+        return paginator.page(1), 1
 
 
 def library_view(request):
     """Render a library."""
     photos = request.user.photos.all()
     albums = request.user.albums.all()
-    photos, pp = get_paginated(
-        Paginator(photos, 4),
+    photos, pp = get_paginated(Paginator(photos, 4),
         request.GET.get('pp', 1)
     )
     albums, ap = get_paginated(
