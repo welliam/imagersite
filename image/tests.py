@@ -193,7 +193,7 @@ class LibraryTestCase(UserTestCase):
     def test_library_view_many_albums_page_2(self):
         """Test library view when there are > 1 page of albums."""
         self.client.force_login(self.other_user)
-        page2 = self.client.get(reverse('library') + '?page=2')
+        page2 = self.client.get(reverse('library') + '?ap=2')
         for i in range(26, 30):
             self.assertNotContains(page2, 'a{}'.format(i))
         for i in range(4, 8):
@@ -202,10 +202,9 @@ class LibraryTestCase(UserTestCase):
     def test_library_view_page_number(self):
         """Test show page number when one page 2 of albums."""
         self.client.force_login(self.other_user)
-        response = self.client.get(reverse('library') + '?page=2')
+        response = self.client.get(reverse('library') + '?ap=2')
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, 'Page 1 of 1')
-        self.assertContains(response, 'Page 2 of 1')
+        self.assertContains(response, 'Page 2 of 8')
 
 
 class PhotoViewTestCase(UserTestCase):
