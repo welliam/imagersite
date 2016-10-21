@@ -145,6 +145,10 @@ class LibraryTestCase(UserTestCase):
     """Testcase for Library."""
     def setUp(self):
         super(LibraryTestCase, self).setUp()
+        self.other_user = User(username='album_fiend')
+        self.other_user.save()
+        for i in reversed(range(30)):
+            Album(user=self.other_user, title='a{}'.format(i)).save()
         self.response = self.client.get(reverse('library'))
 
     def test_library_status_code(self):
@@ -179,11 +183,7 @@ class LibraryTestCase(UserTestCase):
 
     def test_library_view_many_albums(self):
         """Test library view when there are > 1 page of albums."""
-        new_user = User(username='album_fiend')
-        new_user.save()
-        self.client.force_login(new_user)
-        for i in reversed(range(30)):
-            Album(user=new_user, title='a{}'.format(i)).save()
+        self.client.force_login(self.other_user)
         response = self.client.get(reverse('library'))
         for i in range(0, 4):
             self.assertContains(response, 'a{}'.format(i))

@@ -21,11 +21,11 @@ def library_view(request):
         photos = pag_photos.page(page)
         albums = pag_albums.page(page)
     except PageNotAnInteger:
-        albums = pag_albums.page(1)
         photos = pag_photos.page(1)
+        albums = pag_albums.page(1)
     except EmptyPage:
-        albums = pag_albums.page(pag_albums.num_pages)
         photos = pag_photos.page(pag_photos.num_pages)
+        albums = pag_albums.page(pag_albums.num_pages)
     for album in albums:
         if not album.cover:
             album.nocover = True
